@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User</title>
+    <link rel="stylesheet" type="text/css" href="/main.css"/>
+</head>
+<body>
+    <section class="attributes">
+        <h1>Pilot Identity Provider</h1>
+        <a class="button" th:href="@{/logout}">Logout</a>
+        <p>The following information is stored in your authentication</p>
+        <ul>
+            <li>Name</li>
+            <li th:text="${user.principal}"></li>
+        </ul>
+        <ul th:each="authority : ${user.authorities}">
+            <li>Authority</li>
+            <li th:text="${authority.authority}"></li>
+        </ul>
+    </section>
+</body>
+</html>

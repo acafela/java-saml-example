@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pilot Service Provider</title>
+</head>
+<body>
+    <section class="">
+        <a class="button" th:href="@{/logout}">Logout</a>
+        <p>IdP로 부터 받은 Attributes</p>
+        <ul>
+            <li th:text="${user.nameIDType}"></li>
+            <li th:text="${user.nameID}"></li>
+        </ul>
+        <ul th:each="attr : ${user.attributes}">
+            <li th:text="${attr.name}"></li>
+            <li th:text="${attr.value}"></li>
+        </ul>
+    </section>
+</body>
+</html>

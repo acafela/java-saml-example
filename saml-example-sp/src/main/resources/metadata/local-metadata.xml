@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<md:EntityDescriptor
+	ID="_9ea4b4d4-db5f-4572-9d79-2da6f70c6dca"
+	entityID="pilot_entity"
+	validUntil="2020-03-27T07:18:16.793Z"
+	xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata">
+	<ds:Signature
+		xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+		<ds:SignedInfo>
+			<ds:CanonicalizationMethod
+				Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+			<ds:SignatureMethod
+				Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
+			<ds:Reference
+				URI="#_9ea4b4d4-db5f-4572-9d79-2da6f70c6dca">
+				<ds:Transforms>
+					<ds:Transform
+						Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+					<ds:Transform
+						Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+				</ds:Transforms>
+				<ds:DigestMethod
+					Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+				<ds:DigestValue />
+			</ds:Reference>
+		</ds:SignedInfo>
+		<ds:SignatureValue />
+	</ds:Signature>
+	<md:IDPSSODescriptor
+		protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+		<md:KeyDescriptor use="signing">
+			<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+				<ds:X509Data>
+					<ds:X509Certificate>MIICwDCCAagCCQC5xppJazWl2DANBgkqhkiG9w0BAQsFADAiMSAwHgYDVQQKDBdPcmdhbml6YXRp
+						b24sIENOPU11amluYTAeFw0yMDAzMTcwMjQxMzdaFw0zMDAzMTcwMjQxMzdaMCIxIDAeBgNVBAoM
+						F09yZ2FuaXphdGlvbiwgQ049TXVqaW5hMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+						mM8chtJmRusmjSdV28aW6RqO/ADzpMGVQ5SJor5spuFPxo2hdHN0fipVfz9huu2q6d6vNDmNB9fC
+						IYfZLJgBLFJwqax7CZb2Qqa5Z5NRaq7npfNrxaRFFOlWeqBbWe9FNZTMegQqGG8R9cEPGYFJaLiw
+						42WaDGh4R7t7vo2zbBF+d4AE1fTZvJ5Id/qLGAXboqUmf4bt3FHAY0ZF0Xzt6ibTIQq2y0/ajgkw
+						ndWQPjpy0Sizr2icwPJGuzl8pwSXlZkgcdqp/dZODbqZt36A2TKxcV9BTRvHGMhBXhNirbU0MUZc
+						wDobKmbVwWdB1x1ScQystD4SiqgejHuCDRlOJQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQBV4Brz
+						OwdcTjUIjInEx52bckClyjn5g4tHiL42PSM4gQQQjHgDOpMFgoNjncR7rNYba8rI47dvLtHujhMr
+						hq1Vkt0ExS3+rPeiARqv7c/KuCOh/mfAtsJOo3dGaVNdDoK6q/o2DkZAWot2SAEoCrHCiweO2Di2
+						AL5Tcs2gDah4bw9Mgjptaz37LfhIsGsTMXHbttgbuBakeUmfWzBdpjHnO0hJ8vFYUS+nvOJNyEu1
+						TLgR/dLgeGMgXze0eMEfYAvjPRfJ84ZRTHpSMLMHM/RgZjy7eLS/fnwgOQTeI/g3c3lvBKMNBL3c
+						EbUgOv6CQve4CzgJGBrO9FXfiD1KEp00
+					</ds:X509Certificate>
+				</ds:X509Data>
+			</ds:KeyInfo>
+		</md:KeyDescriptor>
+		<md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
+		</md:NameIDFormat>
+		<md:SingleSignOnService
+			Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+			Location="http://localhost:9105/sso" />
+	</md:IDPSSODescriptor>
+</md:EntityDescriptor>
