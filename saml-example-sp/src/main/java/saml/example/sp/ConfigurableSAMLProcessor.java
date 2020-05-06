@@ -14,35 +14,35 @@ import org.springframework.security.saml.processor.SAMLProcessorImpl;
 
 public class ConfigurableSAMLProcessor extends SAMLProcessorImpl {
 
-  private final SpConfiguration spConfiguration;
+	private final SpConfiguration spConfiguration;
 
-  public ConfigurableSAMLProcessor(Collection<SAMLBinding> bindings, SpConfiguration spConfiguration) {
-    super(bindings);
-    this.spConfiguration = spConfiguration;
-  }
+	public ConfigurableSAMLProcessor(Collection<SAMLBinding> bindings, SpConfiguration spConfiguration) {
+		super(bindings);
+		this.spConfiguration = spConfiguration;
+	}
 
-  @Override
-  public SAMLMessageContext sendMessage(SAMLMessageContext samlContext, boolean sign)
-    throws SAMLException, MetadataProviderException, MessageEncodingException {
+	@Override
+	public SAMLMessageContext sendMessage(SAMLMessageContext samlContext, boolean sign)
+			throws SAMLException, MetadataProviderException, MessageEncodingException {
 
-    Endpoint endpoint = samlContext.getPeerEntityEndpoint();
+		Endpoint endpoint = samlContext.getPeerEntityEndpoint();
 
-    SAMLBinding binding = getBinding(endpoint);
-    
-    System.out.println("entity id : " + spConfiguration.getEntityId());
+		SAMLBinding binding = getBinding(endpoint);
 
-    samlContext.setLocalEntityId(spConfiguration.getEntityId());
-    samlContext.getLocalEntityMetadata().setEntityID(spConfiguration.getEntityId());
-    samlContext.getPeerEntityEndpoint().setLocation(spConfiguration.getIdpSSOServiceURL());
-    
-    SPSSODescriptor roleDescriptor = (SPSSODescriptor) samlContext.getLocalEntityRoleMetadata();
-    AssertionConsumerService assertionConsumerService = roleDescriptor.getAssertionConsumerServices()
-    															.stream()
-    															.filter(service -> service.isDefault()).findAny().orElseThrow(() -> new RuntimeException("No default ACS"));
-    assertionConsumerService.setBinding(spConfiguration.getProtocolBinding());
-    assertionConsumerService.setLocation(spConfiguration.getAssertionConsumerServiceURL());
+		samlContext.setLocalEntityId(spConfiguration.getEntityId());
+		samlContext.getLocalEntityMetadata().setEntityID(spConfiguration.getEntityId());
+		samlContext.getPeerEntityEndpoint().setLocation(spConfiguration.getIdpSsoServiceUrl());
 
-    return super.sendMessage(samlContext, spConfiguration.isNeedsSigning(), binding);
+		SPSSODescriptor roleDescriptor = (SPSSODescriptor) samlContext.getLocalEntityRoleMetadata();
+		AssertionConsumerService assertionConsumerService = roleDescriptor.getAssertionConsumerServices()
+																			.stream()
+																			.filter(service -> service.isDefault())
+																			.findAny()
+																			.orElseThrow(() -> new RuntimeException("No default ACS"));
+		assertionConsumerService.setBinding(spConfiguration.getProtocolBinding());
+		assertionConsumerService.setLocation(spConfiguration.getAssertionConsumerServiceUrl());
 
-  }
+		return super.sendMessage(samlContext, spConfiguration.isNeedsSigning(), binding);
+
+	}
 }
