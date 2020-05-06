@@ -5,50 +5,45 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.saml.key.JKSKeyManager;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
-import saml.example.core.SecurityConfiguration;
 
 @Component
 @Getter
 @Setter
-public class SpConfiguration extends SecurityConfiguration {
+public class SpConfiguration {
+	
+	@JsonIgnore
+	private JKSKeyManager keyManager;
 
-	private String defaultEntityId;
-
-	private String defaultIdpSSOServiceURL;
-	private String idpSSOServiceURL;
-	private String defaultProtocolBinding;
+	private String entityId;
+	private String idpSsoServiceUrl;
 	private String protocolBinding;
-	private String defaultAssertionConsumerServiceURL;
-	private boolean defaultNeedsSigning;
-	private String assertionConsumerServiceURL;
+	private boolean needsSigning;
+	private String assertionConsumerServiceUrl;
 	private String spPrivateKey;
 	private String spCertificate;
 
 	@Autowired
-	public SpConfiguration(JKSKeyManager keyManager, @Value("${sp.base_url}") String spBaseUrl,
+	public SpConfiguration(JKSKeyManager keyManager,
+			@Value("${sp.base_url}") String spBaseUrl,
 			@Value("${sp.entity_id}") String entityId,
-			@Value("${sp.single_sign_on_service_location}") String defaultIdpSSOServiceURL,
-			@Value("${sp.acs_location_path}") String defaultAssertionConsumerServiceURLPath,
+			@Value("${sp.single_sign_on_service_location}") String idpSsoServiceUrl,
+			@Value("${sp.acs_location_path}") String assertionConsumerServiceURLPath,
 			@Value("${sp.protocol_binding}") String defaultProtocolBinding,
-			@Value("${sp.private_key}") String spPrivateKey, @Value("${sp.certificate}") String spCertificate,
+			@Value("${sp.private_key}") String spPrivateKey,
+			@Value("${sp.certificate}") String spCertificate,
 			@Value("${sp.needs_signing}") boolean needsSigning) {
-		super(keyManager);
-		this.setDefaultEntityId(entityId);
-		this.setDefaultIdpSSOServiceURL(defaultIdpSSOServiceURL);
-		this.setDefaultAssertionConsumerServiceURL(spBaseUrl + defaultAssertionConsumerServiceURLPath);
-		this.setDefaultProtocolBinding(defaultProtocolBinding);
-		this.setSpPrivateKey(spPrivateKey);
-		this.setSpCertificate(spCertificate);
-		this.setDefaultNeedsSigning(needsSigning);
-		setEntityId(entityId, false);
-		setNeedsSigning(defaultNeedsSigning);
-		resetKeyStore(defaultEntityId, spPrivateKey, spCertificate);
-		setIdpSSOServiceURL(defaultIdpSSOServiceURL);
-		setProtocolBinding(defaultProtocolBinding);
-		setAssertionConsumerServiceURL(defaultAssertionConsumerServiceURL);
-		setSignatureAlgorithm(getDefaultSignatureAlgorithm());
+		this.keyManager = keyManager;
+		this.entityId = entityId;
+		this.idpSsoServiceUrl = idpSsoServiceUrl;
+		this.assertionConsumerServiceUrl = spBaseUrl + assertionConsumerServiceURLPath;
+		this.protocolBinding = defaultProtocolBinding;
+		this.spPrivateKey = spPrivateKey;
+		this.spCertificate = spCertificate;
+		this.needsSigning = needsSigning;
 	}
 
 }
