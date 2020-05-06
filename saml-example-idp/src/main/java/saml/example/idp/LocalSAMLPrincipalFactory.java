@@ -18,7 +18,7 @@ public class LocalSAMLPrincipalFactory extends AbstractSAMLPrincipalFactory {
 
 		Object userDetails = authentication.getDetails();
 
-		if (authentication.getDetails() instanceof LocalUserDetails) {
+		if (userDetails instanceof LocalUserDetails) {
 
 			LocalUserDetails localUserDetails = (LocalUserDetails) userDetails;
 
