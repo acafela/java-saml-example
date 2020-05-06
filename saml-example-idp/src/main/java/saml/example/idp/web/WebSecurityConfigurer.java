@@ -32,6 +32,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.saml.SAMLBootstrap;
 import org.springframework.security.saml.key.JKSKeyManager;
 import org.springframework.security.saml.util.VelocityFactory;
@@ -41,11 +42,29 @@ import saml.example.core.KeyStoreLocator;
 import saml.example.core.UpgradedSAMLBootstrap;
 import saml.example.idp.IdpConfiguration;
 import saml.example.idp.LocalAuthenticationProvider;
+import saml.example.idp.LocalUserDetails;
 import saml.example.idp.SAMLMessageHandler;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfigurer implements WebMvcConfigurer {
+	
+	@Bean
+	public LocalAuthenticationProvider authenticationProvider() {
+		LocalUserDetails admin = LocalUserDetails.builder().department("Development Team")
+														.displayName("시스템관리자")
+														.mail("administrator@xxx.com")
+														.userPrincipalName("admin")
+														.password("admin123")
+														.authorities(Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"))).build();
+		LocalUserDetails user = LocalUserDetails.builder().department("HR Team")
+														.displayName("일반사용자")
+														.mail("user123@xxx.com")
+														.userPrincipalName("user")
+														.password("user123")
+														.authorities(Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))).build();
+		return new LocalAuthenticationProvider(Arrays.asList(admin, user));
+	}
 
 	@Bean
 	@Autowired
