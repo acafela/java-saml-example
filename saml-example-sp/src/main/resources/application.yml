@@ -22,6 +22,7 @@ sp:
   # ACS URL
   acs_location_path: /saml/SSO
   # Protocol binding
+#  protocol_binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect
   protocol_binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
   # authnRequest sining 여부
   needs_signing: true
@@ -31,4 +32,4 @@ sp:
 logging:
   level:
     root: info
-    saml.sample.sp: debug
+    saml.example.sp: debug

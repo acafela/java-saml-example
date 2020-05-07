@@ -24,4 +24,4 @@ idp:
 logging:
   level:
     root: info
-    saml.sample.idp: debug
+    saml.example.idp: debug
