@@ -8,7 +8,6 @@ import static saml.example.core.SAMLBuilder.buildSAMLObject;
 import static saml.example.core.SAMLBuilder.buildStatus;
 import static saml.example.core.SAMLBuilder.signAssertion;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
@@ -34,6 +33,7 @@ import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.ws.message.decoder.MessageDecodingException;
 import org.opensaml.ws.message.encoder.MessageEncodingException;
 import org.opensaml.ws.security.SecurityPolicyResolver;
+import org.opensaml.ws.transport.http.HttpServletRequestAdapter;
 import org.opensaml.ws.transport.http.HttpServletResponseAdapter;
 import org.opensaml.xml.io.MarshallingException;
 import org.opensaml.xml.security.CriteriaSet;
@@ -46,7 +46,6 @@ import org.opensaml.xml.validation.ValidatorSuite;
 import org.springframework.security.saml.context.SAMLMessageContext;
 import org.springframework.security.saml.key.KeyManager;
 
-import saml.example.core.ProxiedSAMLContextProviderLB;
 import saml.example.core.SAMLBuilder;
 import saml.example.core.SAMLPrincipal;
 
@@ -59,7 +58,7 @@ public class SAMLMessageHandler {
 	private final IdpConfiguration idpConfiguration;
 
 	private final List<ValidatorSuite> validatorSuites;
-	private final ProxiedSAMLContextProviderLB proxiedSAMLContextProviderLB;
+//	private final SAMLContextProviderLB proxiedSAMLContextProviderLB;
 
 	public SAMLMessageHandler(KeyManager keyManager, Collection<SAMLMessageDecoder> decoders,
 			SAMLMessageEncoder encoder, SecurityPolicyResolver securityPolicyResolver,
@@ -69,17 +68,20 @@ public class SAMLMessageHandler {
 		this.decoders = decoders;
 		this.resolver = securityPolicyResolver;
 		this.idpConfiguration = idpConfiguration;
-		this.validatorSuites = asList(getValidatorSuite("saml2-core-schema-validator"),
-				getValidatorSuite("saml2-core-spec-validator"));
-		this.proxiedSAMLContextProviderLB = new ProxiedSAMLContextProviderLB(new URI(idpBaseUrl));
+		this.validatorSuites = asList(getValidatorSuite("saml2-core-schema-validator"), getValidatorSuite("saml2-core-spec-validator"));
+//		this.proxiedSAMLContextProviderLB = new SAMLContextProviderLB();
 	}
 
 	public SAMLMessageContext extractSAMLMessageContext(HttpServletRequest request, HttpServletResponse response,
 			boolean postRequest)
 			throws ValidationException, SecurityException, MessageDecodingException, MetadataProviderException {
 		SAMLMessageContext messageContext = new SAMLMessageContext();
-
-		proxiedSAMLContextProviderLB.populateGenericContext(request, response, messageContext);
+		
+		HttpServletRequestAdapter inTransport = new HttpServletRequestAdapter(request);
+        HttpServletResponseAdapter outTransport = new HttpServletResponseAdapter(response, request.isSecure());
+        request.setAttribute(org.springframework.security.saml.SAMLConstants.LOCAL_CONTEXT_PATH, request.getContextPath());
+        messageContext.setInboundMessageTransport(inTransport);
+        messageContext.setOutboundMessageTransport(outTransport);
 
 		messageContext.setSecurityPolicyResolver(resolver);
 
@@ -89,7 +91,6 @@ public class SAMLMessageHandler {
 		SAMLObject inboundSAMLMessage = messageContext.getInboundSAMLMessage();
 
 		AuthnRequest authnRequest = (AuthnRequest) inboundSAMLMessage;
-		// lambda is poor with Exceptions
 		for (ValidatorSuite validatorSuite : validatorSuites) {
 			validatorSuite.validate(authnRequest);
 		}
@@ -125,12 +126,12 @@ public class SAMLMessageHandler {
 		signAssertion(assertion, signingCredential);
 
 		authResponse.getAssertions().add(assertion);
-		authResponse.setDestination(principal.getAssertionConsumerServiceURL());
+		authResponse.setDestination(principal.getAssertionConsumerServiceUrl());
 
 		authResponse.setStatus(status);
 
 		Endpoint endpoint = buildSAMLObject(Endpoint.class, SingleSignOnService.DEFAULT_ELEMENT_NAME);
-		endpoint.setLocation(principal.getAssertionConsumerServiceURL());
+		endpoint.setLocation(principal.getAssertionConsumerServiceUrl());
 
 		HttpServletResponseAdapter outTransport = new HttpServletResponseAdapter(response, false);
 

@@ -22,7 +22,7 @@ public class SAMLPrincipal implements Principal {
 
 	private String serviceProviderEntityID;
 	private String requestID;
-	private String assertionConsumerServiceURL;
+	private String assertionConsumerServiceUrl;
 	private String relayState;
 
 	@NonNull private List<SAMLAttribute> attributes;

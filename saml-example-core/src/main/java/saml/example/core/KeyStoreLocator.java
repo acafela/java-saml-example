@@ -40,9 +40,8 @@ public class KeyStoreLocator {
 		}
 	}
 
-	public static void addPrivateKey(KeyStore keyStore, String alias, String privateKey, String certificate,
-			String password) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, KeyStoreException,
-			CertificateException {
+	public static void addPrivateKey(KeyStore keyStore, String alias, String privateKey, String certificate, String password) 
+			throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, KeyStoreException,CertificateException {
 		String wrappedCert = wrapCert(certificate);
 		byte[] decodedKey = Base64.getDecoder().decode(privateKey.getBytes());
 

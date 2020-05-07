@@ -28,7 +28,7 @@ public abstract class AbstractSAMLPrincipalFactory {
 		SAMLPrincipal principal = SAMLPrincipal.builder(authentication.getName(), nameIdType, attributes)
 										.serviceProviderEntityID(authnRequest.getIssuer().getValue())
 										.requestID(authnRequest.getID())
-										.assertionConsumerServiceURL(authnRequest.getAssertionConsumerServiceURL())
+										.assertionConsumerServiceUrl(authnRequest.getAssertionConsumerServiceURL())
 										.relayState(messageContext.getRelayState())
 										.build();
 		

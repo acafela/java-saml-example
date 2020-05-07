@@ -39,7 +39,6 @@ import org.springframework.security.saml.util.VelocityFactory;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import saml.example.core.KeyStoreLocator;
-import saml.example.core.UpgradedSAMLBootstrap;
 import saml.example.idp.IdpConfiguration;
 import saml.example.idp.LocalAuthenticationProvider;
 import saml.example.idp.LocalUserDetails;
@@ -93,8 +92,8 @@ public class WebSecurityConfigurer implements WebMvcConfigurer {
 	}
 
 	@Bean
-	public static SAMLBootstrap sAMLBootstrap() {
-		return new UpgradedSAMLBootstrap();
+	public static SAMLBootstrap samlBootstrap() {
+		return new SAMLBootstrap();
 	}
 
 	@Autowired

@@ -32,7 +32,7 @@ public class SpConfiguration {
 			@Value("${sp.entity_id}") String entityId,
 			@Value("${sp.single_sign_on_service_location}") String idpSsoServiceUrl,
 			@Value("${sp.acs_location_path}") String assertionConsumerServiceURLPath,
-			@Value("${sp.protocol_binding}") String defaultProtocolBinding,
+			@Value("${sp.protocol_binding}") String protocolBinding,
 			@Value("${sp.private_key}") String spPrivateKey,
 			@Value("${sp.certificate}") String spCertificate,
 			@Value("${sp.needs_signing}") boolean needsSigning) {
@@ -40,7 +40,7 @@ public class SpConfiguration {
 		this.entityId = entityId;
 		this.idpSsoServiceUrl = idpSsoServiceUrl;
 		this.assertionConsumerServiceUrl = spBaseUrl + assertionConsumerServiceURLPath;
-		this.protocolBinding = defaultProtocolBinding;
+		this.protocolBinding = protocolBinding;
 		this.spPrivateKey = spPrivateKey;
 		this.spCertificate = spCertificate;
 		this.needsSigning = needsSigning;
