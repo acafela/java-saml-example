@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import saml.example.core.SAMLPrincipal;
 import saml.example.idp.AbstractSAMLPrincipalFactory;
@@ -31,18 +30,8 @@ public class SsoController {
 
 		LOG.debug("SAMLRequest=[{}], Signature=[{}], SigAlg=[{}], RelayState=[{}]", SAMLRequest, Signature, SigAlg, RelayState);
 
-		doSSO(request, response, authentication, false);
-	}
-
-	@PostMapping("/sso")
-	public void ssoPost(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws Exception {
-		doSSO(request, response, authentication, true);
-	}
-	
-	private void doSSO(HttpServletRequest request, HttpServletResponse response, Authentication authentication, boolean postRequest) throws Exception {
-		
 		@SuppressWarnings("rawtypes")
-		SAMLMessageContext messageContext = samlMessageHandler.extractSAMLMessageContext(request, response, postRequest);
+		SAMLMessageContext messageContext = samlMessageHandler.extractSAMLMessageContext(request, response, false);
 		
 		AbstractSAMLPrincipalFactory principalFactory = new LocalSAMLPrincipalFactory();
 
