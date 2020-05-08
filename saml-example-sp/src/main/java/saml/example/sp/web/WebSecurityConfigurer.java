@@ -7,7 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -101,8 +100,6 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 	public SAMLEntryPoint samlEntryPoint() {
 		WebSSOProfileOptions webSSOProfileOptions = new WebSSOProfileOptions();
 		webSSOProfileOptions.setIncludeScoping(false);
-//		webSSOProfileOptions.setBinding("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect");
-//		webSSOProfileOptions.set
 
 		SAMLEntryPoint samlEntryPoint = new SAMLEntryPoint();
 		samlEntryPoint.setFilterProcessesUrl("login");
@@ -238,7 +235,6 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 		metadataGenerator.setExtendedMetadata(extendedMetadata());
 		metadataGenerator.setIncludeDiscoveryExtension(false);
 		metadataGenerator.setKeyManager(keyManager());
-//		metadataGenerator.setBindingsSSO(Arrays.asList("post", "redirect"));
 		return metadataGenerator;
 	}
 

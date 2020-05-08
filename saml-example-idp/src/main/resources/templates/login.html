@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login</title>
-    <script th:src="@{/main.js}"></script>
+    <title>Identity Provider</title>
+    <script th:src="@{/login.js}"></script>
 </head>
 <body>
-
-<section class="login-container">
-    <section class="login">
-        <h1>Pilot Identity Provider</h1>
-        <p th:if="${param.error}" class="error">Wrong user or password</p>
-        <form class="login-form" th:action="@{/login}" method="post">
-            <input type="text" id="username" name="username" autofocus="autofocus" placeholder="Username" value="admin"/>
-            <input type="password" id="password" name="password" placeholder="Password" value="admin123"/>
-            <input class="button" type="submit" value="Login"/>
-        </form>
-    </section>
-    
-</section>
+	<h1>IdP 로그인</h1>
+	<p th:if="${param.error}">아이디 또는 패스워드를 확인하세요.</p>
+	<form class="login-form" th:action="@{/login}" method="post">
+		<input type="text" id="username" name="username" autofocus="autofocus" placeholder="Username" value=""/>
+		<input type="password" id="password" name="password" placeholder="Password" value=""/>
+		<input class="button" id="login" type="submit" value="Login"/>
+	</form>
 </body>
 </html>

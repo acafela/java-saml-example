@@ -35,7 +35,7 @@ public class SsoController {
 	}
 
 	@PostMapping("/sso")
-	public void singleSignOnServicePost(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws Exception {
+	public void ssoPost(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws Exception {
 		doSSO(request, response, authentication, true);
 	}
 	
