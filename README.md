@@ -3,6 +3,11 @@
 > Single Sign On을 위한 방식 중 SAML 파일럿 프로젝트 위해 코드를 만들어 봤습니다.  
 간단히 SAML 2.o IdP, SP 테스트나 POC가 필요하시면 해당 예제 참고하면 좋겠습니다.  
 
+### 예제 SAML SSO 케이스 - SP-Initiated SSO : Redirect/POST Bindings
+SAML SSO의 여러 사용 케이스 중 SP-Initiated SSO : Redirect/POST Bindings 을 테스트 가능합니다.
+조금 더 복잡한 설정이나, 다양한 사용 케이스 테스트가 필요하면 [OpenConext/Mujina](https://github.com/OpenConext/Mujina), [pac4j](https://github.com/pac4j/pac4j)🙏 를 참고하시기 바랍니다.  
+현재 프로젝트를 만들때 참고한 오픈소스 입니다.
+
 ### 실행 환경, 주요 라이브러리
 
 - Java 1.8
