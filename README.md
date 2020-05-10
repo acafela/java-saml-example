@@ -30,7 +30,7 @@ cd java-saml-example
 ./gradlew :saml-example-sp:bootRun
 ```
 
-#### 4. [http://localhost:9106(Service Provider)](http://localhost:9106){:target="_blank"} 접속, 로그인하기 클릭
+#### 4. [http://localhost:9106(Service Provider)](http://localhost:9106) 접속, 로그인하기 클릭
 
 - _Identity Provider 인증 페이지로 리다이렉트 됩니다._
 
@@ -61,6 +61,6 @@ cd java-saml-example
 
 ### Reference
 
-- [OASIS Doc](http://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0.html){:target="_blank"}
-- [OpenConext/Mujina](https://github.com/OpenConext/Mujina){:target="_blank"}
-- [pac4j](https://github.com/pac4j/pac4j){:target="_blank"}
+- [OASIS Doc](http://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0.html)
+- [OpenConext/Mujina](https://github.com/OpenConext/Mujina)
+- [pac4j](https://github.com/pac4j/pac4j)
