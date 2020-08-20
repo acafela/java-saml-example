@@ -4,7 +4,8 @@ jar {
 
 dependencies {
 
-	compile project(':saml-example-core')
+	implementation 'junit:junit:4.12'
+    compile project(':saml-example-core')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')  
     
