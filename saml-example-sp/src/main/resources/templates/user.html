@@ -5,14 +5,17 @@
 </head>
 <body>
     <div>
-        <a class="button" th:href="@{/logout}">로그아웃</a>
+<!--        <a class="button" th:href="@{/logout}">로그아웃</a>-->
         <p>NameID</p>
         <ul>
-            <li th:text="${user.nameIDType} + ' : ' + ${user.nameID}"></li>
+            <li th:text="${user.username}"></li>
         </ul>
         <p>IdP로 부터 받은 Attributes</p>
-        <ul th:each="attr : ${user.attributes}">
-            <li th:text="${attr.name} + ' : ' + ${attr.value}"></li>            
+        <ul>
+            <li><span>email : </span><span th:text="${user.email}"></span></li>
+            <li><span>federationIdentifier : </span><span th:text="${user.federationIdentifier}"></span></li>
+            <li><span>department : </span><span th:text="${user.department}"></span></li>
+            <li><span>displayName : </span><span th:text="${user.displayName}"></span></li>
         </ul>
     </div>
 </body>

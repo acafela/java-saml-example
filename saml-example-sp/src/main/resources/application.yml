@@ -1,11 +1,15 @@
 server:
-  port: 9100
+  port: 9106
   servlet:
     context-path:
     session:
       timeout: 3600
 
-spring:  profiles:    active: dev
+sp:
+  entity_id: http://localhost:9106
+  single_sign_on_service_location: http://localhost:9105/sso
+  acs: http://localhost:9106/acs
+  login_url: /sso/saml2
 
 logging:
   level:
