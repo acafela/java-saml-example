@@ -8,11 +8,9 @@ SAML SSO의 여러 사용 케이스 중 SP-Initiated SSO : Redirect/POST Binding
 조금 더 복잡한 설정이나, 다양한 사용 케이스 테스트가 필요하면 [OpenConext/Mujina](https://github.com/OpenConext/Mujina), [pac4j](https://github.com/pac4j/pac4j)🙏 를 참고하시기 바랍니다.  
 현재 프로젝트를 만들때 참고한 오픈소스 입니다.
 
-### 실행 환경, 주요 라이브러리
+### 실행 환경
 
-- Java 1.8
-- SpringBoot 2.1.9, Gradle 4.7
-- opensaml-2.6.4, spring-security-saml2-core-1.0.10
+- Java 1.8+
 
 ### 실행 하기
 
