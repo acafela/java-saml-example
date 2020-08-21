@@ -1,35 +1,9 @@
 package saml.example.core;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.xml.namespace.QName;
-
 import org.joda.time.DateTime;
 import org.opensaml.Configuration;
-import org.opensaml.saml2.core.Assertion;
-import org.opensaml.saml2.core.Attribute;
-import org.opensaml.saml2.core.AttributeStatement;
-import org.opensaml.saml2.core.AttributeValue;
-import org.opensaml.saml2.core.Audience;
-import org.opensaml.saml2.core.AudienceRestriction;
-import org.opensaml.saml2.core.AuthenticatingAuthority;
-import org.opensaml.saml2.core.AuthnContext;
-import org.opensaml.saml2.core.AuthnContextClassRef;
-import org.opensaml.saml2.core.AuthnStatement;
-import org.opensaml.saml2.core.Conditions;
-import org.opensaml.saml2.core.Issuer;
-import org.opensaml.saml2.core.NameID;
-import org.opensaml.saml2.core.NameIDType;
-import org.opensaml.saml2.core.Status;
-import org.opensaml.saml2.core.StatusCode;
-import org.opensaml.saml2.core.StatusMessage;
-import org.opensaml.saml2.core.Subject;
-import org.opensaml.saml2.core.SubjectConfirmation;
-import org.opensaml.saml2.core.SubjectConfirmationData;
+import org.opensaml.common.SAMLVersion;
+import org.opensaml.saml2.core.*;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.XMLObjectBuilderFactory;
 import org.opensaml.xml.io.MarshallingException;
@@ -37,13 +11,16 @@ import org.opensaml.xml.schema.XSAny;
 import org.opensaml.xml.schema.XSString;
 import org.opensaml.xml.schema.impl.XSAnyBuilder;
 import org.opensaml.xml.security.credential.Credential;
-import org.opensaml.xml.signature.SignableXMLObject;
-import org.opensaml.xml.signature.Signature;
-import org.opensaml.xml.signature.SignatureConstants;
-import org.opensaml.xml.signature.SignatureException;
-import org.opensaml.xml.signature.Signer;
+import org.opensaml.xml.signature.*;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import javax.xml.namespace.QName;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static java.util.stream.Collectors.toList;
 
 public class SAMLBuilder {
 
@@ -52,6 +29,18 @@ public class SAMLBuilder {
 	@SuppressWarnings("unchecked")
 	public static <T> T buildSAMLObject(final Class<T> objectClass, QName qName) {
 		return (T) builderFactory.getBuilder(qName).buildObject(qName);
+	}
+
+	public static AuthnRequest buildAuthnRequest(String acsUrl, String protocolBinding, Issuer issuer) {
+		AuthnRequest authnRequest = SAMLBuilder.buildSAMLObject(AuthnRequest.class, AuthnRequest.DEFAULT_ELEMENT_NAME);
+		authnRequest.setIsPassive(true);
+		authnRequest.setVersion(SAMLVersion.VERSION_20);
+		authnRequest.setAssertionConsumerServiceURL(acsUrl);
+		authnRequest.setProtocolBinding(protocolBinding);
+		authnRequest.setIssuer(issuer);
+		authnRequest.setIssueInstant(new DateTime());
+		authnRequest.setID(UUID.randomUUID().toString());
+		return authnRequest;
 	}
 
 	public static Issuer buildIssuer(String issuingEntityName) {
@@ -141,6 +130,12 @@ public class SAMLBuilder {
 
 		assertion.setID(randomSAMLId());
 		assertion.setIssueInstant(new DateTime());
+		
+//		Signature signature = (new SignatureBuilder()).buildObject();
+////		signature.setSigningCredential(signingCredential);
+//		signature.setSignatureAlgorithm(SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA256);
+//		signature.setCanonicalizationAlgorithm(SignatureConstants.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
+//		assertion.setSignature(signature);
 
 		return assertion;
 	}
@@ -179,6 +174,27 @@ public class SAMLBuilder {
 			}
 		}
 		return Optional.empty();
+	}
+	
+	public static String getStringFromXMLObject(XMLObject xmlObj) {
+		if (xmlObj instanceof XSString) {
+			return ((XSString) xmlObj).getValue();
+		} else if (xmlObj instanceof XSAny) {
+			XSAny xsAny = (XSAny) xmlObj;
+			String textContent = xsAny.getTextContent();
+			if (StringUtils.hasText(textContent)) {
+				return textContent;
+			}
+			List<XMLObject> unknownXMLObjects = xsAny.getUnknownXMLObjects();
+			if (!CollectionUtils.isEmpty(unknownXMLObjects)) {
+				XMLObject xmlObject = unknownXMLObjects.get(0);
+				if (xmlObject instanceof NameID) {
+					NameID nameID = (NameID) xmlObject;
+					return nameID.getValue();
+				}
+			}
+		} 
+		return "";
 	}
 
 	public static String randomSAMLId() {
