@@ -30,3 +30,8 @@ bin
 
 # IntelliJ
 .idea
+
+# STS
+.settings/
+.classpath
+.project
