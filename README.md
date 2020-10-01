@@ -1,7 +1,7 @@
 # Java SAML Example
 
 > Single Sign On을 위한 방식 중 SAML 파일럿 프로젝트 위해 코드를 만들어 봤습니다.  
-간단히 SAML 2.o IdP, SP 테스트나 POC가 필요하시면 해당 예제 참고하면 좋겠습니다.  
+간단히 SAML 2.0 IdP, SP 테스트나 POC가 필요하시면 해당 예제 참고하면 좋겠습니다.  
 
 ### 예제 SAML SSO 케이스 - SP-Initiated SSO : Redirect/POST Bindings
 SAML SSO의 여러 사용 케이스 중 SP-Initiated SSO : Redirect/POST Bindings 을 테스트 가능합니다.
