@@ -11,29 +11,19 @@ import saml.example.core.SAMLAttribute;
 
 public class LocalSAMLPrincipalFactory extends AbstractSAMLPrincipalFactory {
 
-	protected final Logger LOG = LoggerFactory.getLogger(getClass());
-
 	@Override
 	protected List<SAMLAttribute> createAttributes(Authentication authentication) {
-
 		Object userDetails = authentication.getDetails();
-
-		if (userDetails instanceof LocalUserDetails) {
-
-			LocalUserDetails localUserDetails = (LocalUserDetails) userDetails;
-
-			return Arrays.asList(
-					new SAMLAttribute("User.Username", localUserDetails.getUsername()),
-					new SAMLAttribute("User.Email", localUserDetails.getMail()),
-					new SAMLAttribute("User.FederationIdentifier", localUserDetails.getUsername()),
-					new SAMLAttribute("User.Department", localUserDetails.getDepartment()),
-					new SAMLAttribute("User.DisplayName", localUserDetails.getDisplayName())
-					);
-
-		} else {
-			return null;
+		if (!(userDetails instanceof LocalUserDetails)) {
+			throw new IllegalStateException("Authentication details should LocalUserDetails");
 		}
-
+		LocalUserDetails localUserDetails = (LocalUserDetails) userDetails;
+		return Arrays.asList(
+				new SAMLAttribute("User.Username", localUserDetails.getUsername()),
+				new SAMLAttribute("User.Email", localUserDetails.getMail()),
+				new SAMLAttribute("User.FederationIdentifier", localUserDetails.getUsername()),
+				new SAMLAttribute("User.Department", localUserDetails.getDepartment()),
+				new SAMLAttribute("User.DisplayName", localUserDetails.getDisplayName())
+		);
 	}
-
 }

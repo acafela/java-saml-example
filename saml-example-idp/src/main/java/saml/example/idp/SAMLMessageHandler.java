@@ -56,9 +56,7 @@ public class SAMLMessageHandler {
 	private final SAMLMessageEncoder encoder;
 	private final SecurityPolicyResolver resolver;
 	private final IdpConfiguration idpConfiguration;
-
 	private final List<ValidatorSuite> validatorSuites;
-//	private final SAMLContextProviderLB proxiedSAMLContextProviderLB;
 
 	public SAMLMessageHandler(KeyManager keyManager, Collection<SAMLMessageDecoder> decoders,
 			SAMLMessageEncoder encoder, SecurityPolicyResolver securityPolicyResolver,
@@ -69,12 +67,12 @@ public class SAMLMessageHandler {
 		this.resolver = securityPolicyResolver;
 		this.idpConfiguration = idpConfiguration;
 		this.validatorSuites = asList(getValidatorSuite("saml2-core-schema-validator"), getValidatorSuite("saml2-core-spec-validator"));
-//		this.proxiedSAMLContextProviderLB = new SAMLContextProviderLB();
 	}
 
-	public SAMLMessageContext extractSAMLMessageContext(HttpServletRequest request, HttpServletResponse response,
-			boolean postRequest)
-			throws ValidationException, SecurityException, MessageDecodingException, MetadataProviderException {
+	public SAMLMessageContext extractSAMLMessageContext(HttpServletRequest request,
+														HttpServletResponse response,
+														boolean postRequest)
+			throws ValidationException, SecurityException, MessageDecodingException {
 		SAMLMessageContext messageContext = new SAMLMessageContext();
 		
 		HttpServletRequestAdapter inTransport = new HttpServletRequestAdapter(request);

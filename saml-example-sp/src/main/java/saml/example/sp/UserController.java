@@ -6,12 +6,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import static java.util.Objects.isNull;
+
 @Controller
 public class UserController {
 
 	@GetMapping("/")
 	public String index(Authentication authentication) {
-		if(authentication == null) return "index";
+		if (isNull(authentication)) {
+			return "index";
+		}
 		return authentication.isAuthenticated() ? "redirect:/user" : "index";
 	}
 

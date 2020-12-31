@@ -4,20 +4,15 @@ import org.joda.time.DateTime;
 import org.opensaml.Configuration;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.*;
-import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.XMLObjectBuilderFactory;
 import org.opensaml.xml.io.MarshallingException;
 import org.opensaml.xml.schema.XSAny;
-import org.opensaml.xml.schema.XSString;
 import org.opensaml.xml.schema.impl.XSAnyBuilder;
 import org.opensaml.xml.security.credential.Credential;
 import org.opensaml.xml.signature.*;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import javax.xml.namespace.QName;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
@@ -130,12 +125,6 @@ public class SAMLBuilder {
 
 		assertion.setID(randomSAMLId());
 		assertion.setIssueInstant(new DateTime());
-		
-//		Signature signature = (new SignatureBuilder()).buildObject();
-////		signature.setSigningCredential(signingCredential);
-//		signature.setSignatureAlgorithm(SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA256);
-//		signature.setCanonicalizationAlgorithm(SignatureConstants.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
-//		assertion.setSignature(signature);
 
 		return assertion;
 	}
@@ -153,48 +142,6 @@ public class SAMLBuilder {
 
 		Configuration.getMarshallerFactory().getMarshaller(signableXMLObject).marshall(signableXMLObject);
 		Signer.signObject(signature);
-	}
-
-	public static Optional<String> getStringValueFromXMLObject(XMLObject xmlObj) {
-		if (xmlObj instanceof XSString) {
-			return Optional.ofNullable(((XSString) xmlObj).getValue());
-		} else if (xmlObj instanceof XSAny) {
-			XSAny xsAny = (XSAny) xmlObj;
-			String textContent = xsAny.getTextContent();
-			if (StringUtils.hasText(textContent)) {
-				return Optional.of(textContent);
-			}
-			List<XMLObject> unknownXMLObjects = xsAny.getUnknownXMLObjects();
-			if (!CollectionUtils.isEmpty(unknownXMLObjects)) {
-				XMLObject xmlObject = unknownXMLObjects.get(0);
-				if (xmlObject instanceof NameID) {
-					NameID nameID = (NameID) xmlObject;
-					return Optional.of(nameID.getValue());
-				}
-			}
-		}
-		return Optional.empty();
-	}
-	
-	public static String getStringFromXMLObject(XMLObject xmlObj) {
-		if (xmlObj instanceof XSString) {
-			return ((XSString) xmlObj).getValue();
-		} else if (xmlObj instanceof XSAny) {
-			XSAny xsAny = (XSAny) xmlObj;
-			String textContent = xsAny.getTextContent();
-			if (StringUtils.hasText(textContent)) {
-				return textContent;
-			}
-			List<XMLObject> unknownXMLObjects = xsAny.getUnknownXMLObjects();
-			if (!CollectionUtils.isEmpty(unknownXMLObjects)) {
-				XMLObject xmlObject = unknownXMLObjects.get(0);
-				if (xmlObject instanceof NameID) {
-					NameID nameID = (NameID) xmlObject;
-					return nameID.getValue();
-				}
-			}
-		} 
-		return "";
 	}
 
 	public static String randomSAMLId() {
@@ -234,18 +181,13 @@ public class SAMLBuilder {
 	}
 
 	private static Attribute buildAttribute(String name, List<String> values) {
-//    XSStringBuilder stringBuilder = (XSStringBuilder) Configuration.getBuilderFactory().getBuilder(XSString.TYPE_NAME);
 		XSAnyBuilder anyBuilder = (XSAnyBuilder) Configuration.getBuilderFactory().getBuilder(XSAny.TYPE_NAME);
 
 		Attribute attribute = buildSAMLObject(Attribute.class, Attribute.DEFAULT_ELEMENT_NAME);
 		attribute.setName(name);
-//    attribute.setNameFormat("urn:oasis:names:tc:SAML:2.0:attrname-format:uri");
 		attribute.setNameFormat("urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified");
 
 		List<XSAny> xsStringList = values.stream().map(value -> {
-//        XSString stringValue = stringBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME, XSString.TYPE_NAME);
-//        stringValue.setValue(value);
-//        return stringValue;
 			XSAny anyValue = anyBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME, XSAny.TYPE_NAME);
 			anyValue.setTextContent(value);
 			return anyValue;

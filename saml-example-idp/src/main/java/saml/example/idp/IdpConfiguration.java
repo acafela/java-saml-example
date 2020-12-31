@@ -30,7 +30,5 @@ public class IdpConfiguration {
 		this.entityId = entityId;
 		this.idpPrivateKey = idpPrivateKey;
 		this.idpCertificate = idpCertificate;
-
 	}
-
 }

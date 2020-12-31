@@ -10,7 +10,7 @@ import org.opensaml.xml.signature.X509Data;
 import org.opensaml.xml.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import saml.example.core.SAMLObjectUtils;
+import saml.example.core.SAMLUtil;
 
 import java.io.ByteArrayInputStream;
 import java.security.PublicKey;
@@ -19,18 +19,18 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.List;
 
-public class AssertionConsumer {
+/**
+ * A SAML assertion(SAML response) consumer.
+ */
+final class AssertionConsumer {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AssertionConsumer.class);
 
-    public SpUser consume(Response samlResponse) throws CertificateException, ValidationException {
-
+    SpUser consume(Response samlResponse) throws CertificateException, ValidationException {
         validateSignature(samlResponse);
         checkAuthnInstant(samlResponse, 30);
-
         Assertion assertion = samlResponse.getAssertions().get(0);
-        LOG.debug("Assertion[{}]", SAMLObjectUtils.samlObjectToString(assertion));
-
+        LOGGER.debug("Assertion[{}]", SAMLUtil.samlObjectToString(assertion));
         return createUser(assertion);
     }
 
@@ -42,45 +42,36 @@ public class AssertionConsumer {
     }
 
     private void validateSignature(Response samlResponse) throws CertificateException, ValidationException {
-
         Signature signature = samlResponse.getSignature();
         PublicKey publicKey = extractPublicKey(signature);
-
         SignatureValidator validator = createValidator(publicKey);
-
         try {
             validator.validate(samlResponse.getSignature());
-            LOG.debug("Signature validation success");
+            LOGGER.debug("Signature validation success");
         } catch (ValidationException e) {
-            LOG.error("Signature validation fail.", e);
+            LOGGER.error("Signature validation fail.", e);
             throw e;
         }
     }
 
     private PublicKey extractPublicKey(Signature signature) throws CertificateException {
-
         X509Data x509Data = signature.getKeyInfo().getX509Datas().get(0);
         X509Certificate cert = x509Data.getX509Certificates().get(0);
-
         String wrappedCert = wrapBase64String(cert.getValue());
         CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
         Certificate certificate = certFactory.generateCertificate(new ByteArrayInputStream(wrappedCert.getBytes()));
-
         return certificate.getPublicKey();
     }
 
     private String wrapBase64String(String base64String) {
-
         int lineLength = 64;
-
         char[] rawArr = base64String.toCharArray();
-
         int wrappedArrLength = rawArr.length + (int)Math.ceil(rawArr.length / 64d) - 1;
         char[] wrappedArr = new char[wrappedArrLength];
 
         int destPosition = 0;
-        for(int i=0; i<rawArr.length; i+=lineLength) {
-            if(rawArr.length - i > lineLength) {
+        for (int i = 0; i < rawArr.length; i += lineLength) {
+            if (rawArr.length - i > lineLength) {
                 System.arraycopy(rawArr, i, wrappedArr, destPosition, lineLength);
                 destPosition += lineLength;
                 wrappedArr[destPosition] = '\n';
@@ -89,7 +80,6 @@ public class AssertionConsumer {
                 System.arraycopy(rawArr, i, wrappedArr, destPosition, rawArr.length - i);
             }
         }
-
         return "-----BEGIN CERTIFICATE-----\n" + String.valueOf(wrappedArr) + "\n-----END CERTIFICATE-----";
     }
 
@@ -100,18 +90,14 @@ public class AssertionConsumer {
     }
 
     private void checkAuthnInstant(Response samlResponse, int validMin) throws ValidationException {
-
         Assertion assertion = samlResponse.getAssertions().get(0);
-        AuthnStatement auhtnStatement = assertion.getAuthnStatements().get(0);
-        DateTime authnInstant = auhtnStatement.getAuthnInstant();
-        LOG.debug("AuthnInstant[{}]", authnInstant);
+        AuthnStatement authnStatement = assertion.getAuthnStatements().get(0);
+        DateTime authnInstant = authnStatement.getAuthnInstant();
+        LOGGER.debug("AuthnInstant[{}]", authnInstant);
 
         DateTime validTime = authnInstant.plusMinutes(validMin);
-
-        if(DateTime.now().compareTo(validTime) > 0){
+        if (DateTime.now().compareTo(validTime) > 0) {
             throw new ValidationException("AuthnInstant time out : " + authnInstant);
         }
-
     }
-
 }

@@ -12,26 +12,21 @@ import saml.example.core.SAMLPrincipal;
 
 public abstract class AbstractSAMLPrincipalFactory {
 	
-	public SAMLPrincipal createSAMLPrincipal(@SuppressWarnings("rawtypes") SAMLMessageContext messageContext, Authentication authentication) {
-		
+	public SAMLPrincipal createSAMLPrincipal(@SuppressWarnings("rawtypes") SAMLMessageContext messageContext,
+											 Authentication authentication) {
 		AuthnRequest authnRequest = (AuthnRequest) messageContext.getInboundSAMLMessage();
-
-//		String assertionConsumerServiceURL = authnRequest.getAssertionConsumerServiceURL();
 		List<SAMLAttribute> attributes = createAttributes(authentication);
-
 		String nameIdType = attributes.stream()
 									.filter(attr -> "urn:oasis:names:tc:SAML:1.1:nameid-format".equals(attr.getName()))
 									.findFirst()
 									.map(attr -> attr.getValue())
-									.orElse(NameIDType.UNSPECIFIED); 
-		
+									.orElse(NameIDType.UNSPECIFIED);
 		SAMLPrincipal principal = SAMLPrincipal.builder(authentication.getName(), nameIdType, attributes)
 										.serviceProviderEntityID(authnRequest.getIssuer().getValue())
 										.requestID(authnRequest.getID())
 										.assertionConsumerServiceUrl(authnRequest.getAssertionConsumerServiceURL())
 										.relayState(messageContext.getRelayState())
 										.build();
-		
 		return principal;
 	}
 

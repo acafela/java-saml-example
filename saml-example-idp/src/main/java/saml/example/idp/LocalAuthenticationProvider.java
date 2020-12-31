@@ -6,13 +6,12 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
 public class LocalAuthenticationProvider implements AuthenticationProvider {
-	
-	private final Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private List<LocalUserDetails> localUsers;
 	
@@ -22,14 +21,13 @@ public class LocalAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		
 		String principal = authentication.getPrincipal().toString();
 		String credential = authentication.getCredentials().toString();
-		LOG.debug("Authenticate principal [{}]", principal);
-		
-		Optional<LocalUserDetails> nullableUserDetails = localUsers.stream().filter(u -> u.getUserPrincipalName().equals(principal) && u.getPassword().equals(credential)).findAny();
-		LocalUserDetails userDetails = nullableUserDetails.orElseThrow(() -> new IncorrectIdPwdAuthenticationException("Failed to authentication"));
-		
+		LocalUserDetails userDetails = localUsers.stream()
+												.filter(u -> u.getUserPrincipalName().equals(principal)
+															&& u.getPassword().equals(credential))
+												.findFirst()
+												.orElseThrow(() -> new BadCredentialsException("Incorrect username or password"));
 		return new UserDetailsAuthenticationToken(userDetails, userDetails.getAuthorities());
 	}
 
@@ -37,5 +35,4 @@ public class LocalAuthenticationProvider implements AuthenticationProvider {
 	public boolean supports(Class<?> authentication) {
 		return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
 	}
-
 }

@@ -24,7 +24,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -47,7 +46,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-			.antMatchers("/", "/error", "/favicon.ico", "/*.css", "/*.js", "/acs/**", "/sso/saml2").permitAll()
+			.antMatchers("/", "/error", "/acs/**", "/sso/saml2").permitAll()
 			.anyRequest().hasRole("USER")
 			.and()
 			.httpBasic().authenticationEntryPoint(samlSsoEntryPoint())
@@ -74,6 +73,4 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 	public ParserPool parserPool() {
 		return new StaticBasicParserPool();
 	}
-
 }
-

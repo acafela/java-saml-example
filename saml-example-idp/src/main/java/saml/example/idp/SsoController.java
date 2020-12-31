@@ -1,4 +1,4 @@
-package saml.example.idp.web;
+package saml.example.idp;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import saml.example.core.SAMLPrincipal;
@@ -40,4 +41,8 @@ public class SsoController {
 		samlMessageHandler.sendAuthnResponse(principal, response);
 	}
 
+	@GetMapping({"/login", "/"})
+	public String login() {
+		return "login";
+	}
 }
