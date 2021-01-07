@@ -3,7 +3,6 @@ jar {
 }
 
 dependencies {
-	compile project(':saml-example-core')
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	compile 'org.apache.commons:commons-lang3:3.8.1'

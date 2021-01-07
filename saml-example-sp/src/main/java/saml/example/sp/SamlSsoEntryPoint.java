@@ -22,7 +22,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.web.filter.GenericFilterBean;
-import saml.example.core.SAMLUtil;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

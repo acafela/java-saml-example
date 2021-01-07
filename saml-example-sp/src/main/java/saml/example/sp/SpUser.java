@@ -5,7 +5,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.opensaml.saml2.core.Attribute;
 import org.springframework.security.core.GrantedAuthority;
-import saml.example.core.SAMLUtil;
 
 import java.security.Principal;
 import java.util.ArrayList;

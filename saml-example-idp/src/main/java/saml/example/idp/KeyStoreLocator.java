@@ -1,4 +1,4 @@
-package saml.example.core;
+package saml.example.idp;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

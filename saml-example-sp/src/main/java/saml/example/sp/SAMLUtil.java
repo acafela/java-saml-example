@@ -1,4 +1,4 @@
-package saml.example.core;
+package saml.example.sp;
 
 import org.opensaml.Configuration;
 import org.opensaml.common.SAMLObject;

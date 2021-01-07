@@ -10,7 +10,6 @@ import org.opensaml.xml.signature.X509Data;
 import org.opensaml.xml.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import saml.example.core.SAMLUtil;
 
 import java.io.ByteArrayInputStream;
 import java.security.PublicKey;

@@ -1,8 +1,7 @@
-package saml.example.core;
+package saml.example.idp;
 
 import org.joda.time.DateTime;
 import org.opensaml.Configuration;
-import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.*;
 import org.opensaml.xml.XMLObjectBuilderFactory;
 import org.opensaml.xml.io.MarshallingException;
@@ -24,18 +23,6 @@ public class SAMLBuilder {
 	@SuppressWarnings("unchecked")
 	public static <T> T buildSAMLObject(final Class<T> objectClass, QName qName) {
 		return (T) builderFactory.getBuilder(qName).buildObject(qName);
-	}
-
-	public static AuthnRequest buildAuthnRequest(String acsUrl, String protocolBinding, Issuer issuer) {
-		AuthnRequest authnRequest = SAMLBuilder.buildSAMLObject(AuthnRequest.class, AuthnRequest.DEFAULT_ELEMENT_NAME);
-		authnRequest.setIsPassive(true);
-		authnRequest.setVersion(SAMLVersion.VERSION_20);
-		authnRequest.setAssertionConsumerServiceURL(acsUrl);
-		authnRequest.setProtocolBinding(protocolBinding);
-		authnRequest.setIssuer(issuer);
-		authnRequest.setIssueInstant(new DateTime());
-		authnRequest.setID(UUID.randomUUID().toString());
-		return authnRequest;
 	}
 
 	public static Issuer buildIssuer(String issuingEntityName) {

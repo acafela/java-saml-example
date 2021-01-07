@@ -1,5 +1,6 @@
 package saml.example.idp;
 
+import java.nio.file.attribute.UserPrincipal;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.security.auth.Subject;
+
 @Getter
 @Setter
 @Builder
@@ -20,7 +23,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @SuppressWarnings("serial")
-public class LocalUserDetails implements UserDetails {
+public class LocalUserPrincipal implements UserPrincipal {
 	
 	@NonNull private Collection<? extends GrantedAuthority> authorities;
 	private String userPrincipalName;
@@ -30,38 +33,7 @@ public class LocalUserDetails implements UserDetails {
 	private String mail;
 
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.authorities;
+	public String getName() {
+		return userPrincipalName;
 	}
-
-	@Override
-	public String getPassword() {
-		return this.password;
-	}
-
-	@Override
-	public String getUsername() {
-		return this.userPrincipalName;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-
 }

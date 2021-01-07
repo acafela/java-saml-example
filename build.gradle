@@ -54,7 +54,6 @@ repositories {
 }
 
 dependencies {
-	compile project(':saml-example-core')
 	compile project(':saml-example-idp')
 	compile project(':saml-example-sp')
 }
