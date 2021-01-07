@@ -3,27 +3,23 @@ package saml.example.idp;
 import java.util.Arrays;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
-
-import saml.example.core.SAMLAttribute;
 
 public class LocalSAMLPrincipalFactory extends AbstractSAMLPrincipalFactory {
 
 	@Override
 	protected List<SAMLAttribute> createAttributes(Authentication authentication) {
-		Object userDetails = authentication.getDetails();
-		if (!(userDetails instanceof LocalUserDetails)) {
-			throw new IllegalStateException("Authentication details should LocalUserDetails");
+		Object principal = authentication.getPrincipal();
+		if (!(principal instanceof LocalUserPrincipal)) {
+			throw new IllegalStateException("Authentication details should LocalUserPrincipal");
 		}
-		LocalUserDetails localUserDetails = (LocalUserDetails) userDetails;
+		LocalUserPrincipal localUserPrincipal = (LocalUserPrincipal) principal;
 		return Arrays.asList(
-				new SAMLAttribute("User.Username", localUserDetails.getUsername()),
-				new SAMLAttribute("User.Email", localUserDetails.getMail()),
-				new SAMLAttribute("User.FederationIdentifier", localUserDetails.getUsername()),
-				new SAMLAttribute("User.Department", localUserDetails.getDepartment()),
-				new SAMLAttribute("User.DisplayName", localUserDetails.getDisplayName())
+				new SAMLAttribute("User.Username", localUserPrincipal.getName()),
+				new SAMLAttribute("User.Email", localUserPrincipal.getMail()),
+				new SAMLAttribute("User.FederationIdentifier", localUserPrincipal.getName()),
+				new SAMLAttribute("User.Department", localUserPrincipal.getDepartment()),
+				new SAMLAttribute("User.DisplayName", localUserPrincipal.getDisplayName())
 		);
 	}
 }

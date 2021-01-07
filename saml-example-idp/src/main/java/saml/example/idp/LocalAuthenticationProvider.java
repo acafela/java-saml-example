@@ -1,21 +1,21 @@
 package saml.example.idp;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public class LocalAuthenticationProvider implements AuthenticationProvider {
 	
-	private List<LocalUserDetails> localUsers;
+	private List<LocalUserPrincipal> localUsers;
 	
-	public LocalAuthenticationProvider(List<LocalUserDetails> localUsers) {
+	public LocalAuthenticationProvider(List<LocalUserPrincipal> localUsers) {
 		this.localUsers = localUsers;
 	}
 
@@ -23,12 +23,16 @@ public class LocalAuthenticationProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String principal = authentication.getPrincipal().toString();
 		String credential = authentication.getCredentials().toString();
-		LocalUserDetails userDetails = localUsers.stream()
+		LocalUserPrincipal userDetails = localUsers.stream()
 												.filter(u -> u.getUserPrincipalName().equals(principal)
 															&& u.getPassword().equals(credential))
 												.findFirst()
 												.orElseThrow(() -> new BadCredentialsException("Incorrect username or password"));
-		return new UserDetailsAuthenticationToken(userDetails, userDetails.getAuthorities());
+		return new RememberMeAuthenticationToken(
+				userDetails.getName(),
+				userDetails,
+				Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))
+		);
 	}
 
 	@Override

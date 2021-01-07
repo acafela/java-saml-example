@@ -1,15 +1,12 @@
 package saml.example.idp;
 
-import java.net.URISyntaxException;
 import java.security.KeyStore;
 import java.util.Arrays;
 import java.util.Collections;
 
 import javax.servlet.SessionCookieConfig;
 
-import org.opensaml.common.binding.decoding.URIComparator;
 import org.opensaml.common.binding.security.IssueInstantRule;
-import org.opensaml.saml2.binding.decoding.HTTPPostDecoder;
 import org.opensaml.saml2.binding.decoding.HTTPRedirectDeflateDecoder;
 import org.opensaml.saml2.binding.encoding.HTTPPostSimpleSignEncoder;
 import org.opensaml.ws.security.provider.BasicSecurityPolicy;
@@ -33,15 +30,13 @@ import org.springframework.security.saml.key.JKSKeyManager;
 import org.springframework.security.saml.util.VelocityFactory;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import saml.example.core.KeyStoreLocator;
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfigurer implements WebMvcConfigurer {
 	
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
-		LocalUserDetails admin = LocalUserDetails.builder()
+		LocalUserPrincipal admin = LocalUserPrincipal.builder()
 												.department("Development Team")
 												.displayName("시스템관리자")
 												.mail("administrator@xxx.com")
@@ -51,7 +46,7 @@ public class WebSecurityConfigurer implements WebMvcConfigurer {
 														new SimpleGrantedAuthority("ROLE_ADMIN")
 														, new SimpleGrantedAuthority("ROLE_USER")))
 												.build();
-		LocalUserDetails user = LocalUserDetails.builder()
+		LocalUserPrincipal user = LocalUserPrincipal.builder()
 												.department("HR Team")
 												.displayName("일반사용자")
 												.mail("user123@xxx.com")
@@ -64,35 +59,28 @@ public class WebSecurityConfigurer implements WebMvcConfigurer {
 
 	@Bean
 	@Autowired
-	public SAMLMessageHandler samlMessageHandler(@Value("${idp.clock_skew}") int clockSkew,
+	public SAMLMessageHandler samlMessageHandler(@Value("${idp.entity_id}") String idpEntityId,
+												 @Value("${idp.clock_skew}") int clockSkew,
 												 @Value("${idp.expires}") int expires,
-												 @Value("${idp.base_url}") String idpBaseUrl,
-												 @Value("${idp.compare_endpoints}") boolean compareEndpoints,
-												 IdpConfiguration idpConfiguration,
-												 JKSKeyManager keyManager) throws XMLParserException, URISyntaxException {
+												 JKSKeyManager keyManager) throws XMLParserException {
 		StaticBasicParserPool parserPool = new StaticBasicParserPool();
+		parserPool.initialize();
 		BasicSecurityPolicy securityPolicy = new BasicSecurityPolicy();
 		securityPolicy.getPolicyRules().addAll(Arrays.asList(new IssueInstantRule(clockSkew, expires)));
+
 		HTTPRedirectDeflateDecoder httpRedirectDeflateDecoder = new HTTPRedirectDeflateDecoder(parserPool);
-		HTTPPostDecoder httpPostDecoder = new HTTPPostDecoder(parserPool);
-		if (!compareEndpoints) {
-			URIComparator noopComparator = (uri1, uri2) -> true;
-			httpPostDecoder.setURIComparator(noopComparator);
-			httpRedirectDeflateDecoder.setURIComparator(noopComparator);
-		}
-		parserPool.initialize();
 		HTTPPostSimpleSignEncoder httpPostSimpleSignEncoder = new HTTPPostSimpleSignEncoder(
 				VelocityFactory.getEngine(),
-				"/templates/saml2-post-simplesign-binding.vm",
+				"/templates/saml2-post-binding.vm",
 				true
 		);
 
 		return new SAMLMessageHandler(
+				idpEntityId,
 				keyManager,
-				Arrays.asList(httpRedirectDeflateDecoder, httpPostDecoder),
+				httpRedirectDeflateDecoder,
 				httpPostSimpleSignEncoder,
-				new StaticSecurityPolicyResolver(securityPolicy), idpConfiguration,
-				idpBaseUrl
+				new StaticSecurityPolicyResolver(securityPolicy)
 		);
 	}
 

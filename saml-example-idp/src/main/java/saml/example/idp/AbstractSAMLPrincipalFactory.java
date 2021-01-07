@@ -7,9 +7,6 @@ import org.opensaml.saml2.core.AuthnRequest;
 import org.opensaml.saml2.core.NameIDType;
 import org.springframework.security.core.Authentication;
 
-import saml.example.core.SAMLAttribute;
-import saml.example.core.SAMLPrincipal;
-
 public abstract class AbstractSAMLPrincipalFactory {
 	
 	public SAMLPrincipal createSAMLPrincipal(@SuppressWarnings("rawtypes") SAMLMessageContext messageContext,
