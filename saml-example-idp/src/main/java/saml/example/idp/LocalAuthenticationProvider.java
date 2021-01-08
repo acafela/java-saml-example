@@ -12,31 +12,31 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public class LocalAuthenticationProvider implements AuthenticationProvider {
-	
-	private List<LocalUserPrincipal> localUsers;
-	
-	public LocalAuthenticationProvider(List<LocalUserPrincipal> localUsers) {
-		this.localUsers = localUsers;
-	}
 
-	@Override
-	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		String principal = authentication.getPrincipal().toString();
-		String credential = authentication.getCredentials().toString();
-		LocalUserPrincipal userDetails = localUsers.stream()
-												.filter(u -> u.getUserPrincipalName().equals(principal)
-															&& u.getPassword().equals(credential))
-												.findFirst()
-												.orElseThrow(() -> new BadCredentialsException("Incorrect username or password"));
-		return new RememberMeAuthenticationToken(
-				userDetails.getName(),
-				userDetails,
-				Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))
-		);
-	}
+    private List<LocalUserPrincipal> localUsers;
 
-	@Override
-	public boolean supports(Class<?> authentication) {
-		return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
-	}
+    public LocalAuthenticationProvider(List<LocalUserPrincipal> localUsers) {
+        this.localUsers = localUsers;
+    }
+
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        String principal = authentication.getPrincipal().toString();
+        String credential = authentication.getCredentials().toString();
+        LocalUserPrincipal userDetails = localUsers.stream()
+                                                .filter(u -> u.getUserPrincipalName().equals(principal)
+                                                            && u.getPassword().equals(credential))
+                                                .findFirst()
+                                                .orElseThrow(() -> new BadCredentialsException("Incorrect username or password"));
+        return new RememberMeAuthenticationToken(
+                userDetails.getName(),
+                userDetails,
+                Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))
+        );
+    }
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
+    }
 }

@@ -11,23 +11,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class SsoController {
 
-	private final SAMLMessageHandler samlMessageHandler;
+    private final SAMLMessageHandler samlMessageHandler;
 
-	public SsoController(SAMLMessageHandler samlMessageHandler) {
-		this.samlMessageHandler = samlMessageHandler;
-	}
+    public SsoController(SAMLMessageHandler samlMessageHandler) {
+        this.samlMessageHandler = samlMessageHandler;
+    }
 
-	@GetMapping("/sso")
-	public void sso(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws Exception {
-		@SuppressWarnings("rawtypes")
-		SAMLMessageContext messageContext = samlMessageHandler.extractSAMLMessageContext(request, response);
-		AbstractSAMLPrincipalFactory principalFactory = new LocalSAMLPrincipalFactory();
-		SAMLPrincipal principal = principalFactory.createSAMLPrincipal(messageContext, authentication);
-		samlMessageHandler.sendAuthnResponse(principal, response);
-	}
+    @GetMapping("/sso")
+    public void sso(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws Exception {
+        @SuppressWarnings("rawtypes")
+        SAMLMessageContext messageContext = samlMessageHandler.extractSAMLMessageContext(request, response);
+        AbstractSAMLPrincipalFactory principalFactory = new LocalSAMLPrincipalFactory();
+        SAMLPrincipal principal = principalFactory.createSAMLPrincipal(messageContext, authentication);
+        samlMessageHandler.sendAuthnResponse(principal, response);
+    }
 
-	@GetMapping({"/login", "/"})
-	public String login() {
-		return "login";
-	}
+    @GetMapping({"/login", "/"})
+    public String login() {
+        return "login";
+    }
 }

@@ -24,16 +24,16 @@ import javax.security.auth.Subject;
 @ToString
 @SuppressWarnings("serial")
 public class LocalUserPrincipal implements UserPrincipal {
-	
-	@NonNull private Collection<? extends GrantedAuthority> authorities;
-	private String userPrincipalName;
-	private String department;
-	private String displayName;
-	private String password;
-	private String mail;
 
-	@Override
-	public String getName() {
-		return userPrincipalName;
-	}
+    @NonNull private Collection<? extends GrantedAuthority> authorities;
+    private String userPrincipalName;
+    private String department;
+    private String displayName;
+    private String password;
+    private String mail;
+
+    @Override
+    public String getName() {
+        return userPrincipalName;
+    }
 }

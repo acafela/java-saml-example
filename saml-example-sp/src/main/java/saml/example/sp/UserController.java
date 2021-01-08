@@ -11,18 +11,18 @@ import static java.util.Objects.isNull;
 @Controller
 public class UserController {
 
-	@GetMapping("/")
-	public String index(Authentication authentication) {
-		if (isNull(authentication)) {
-			return "index";
-		}
-		return authentication.isAuthenticated() ? "redirect:/user" : "index";
-	}
+    @GetMapping("/")
+    public String index(Authentication authentication) {
+        if (isNull(authentication)) {
+            return "index";
+        }
+        return authentication.isAuthenticated() ? "redirect:/user" : "index";
+    }
 
-	@GetMapping("user")
-	public String user(Authentication authentication, ModelMap modelMap) {
-		modelMap.addAttribute("user", authentication.getPrincipal());
-		return "user";
-	}
+    @GetMapping("user")
+    public String user(Authentication authentication, ModelMap modelMap) {
+        modelMap.addAttribute("user", authentication.getPrincipal());
+        return "user";
+    }
 
 }

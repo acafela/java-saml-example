@@ -31,44 +31,44 @@ import java.security.cert.CertificateException;
 @Controller
 public class SamlBindingController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SamlBindingController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SamlBindingController.class);
 
-	private final SpAuthenticationProvider spAuthenticationProvider;
-	private final SpAuthenticationSuccessHandler spAuthenticationSuccessHandler;
+    private final SpAuthenticationProvider spAuthenticationProvider;
+    private final SpAuthenticationSuccessHandler spAuthenticationSuccessHandler;
 
-	public SamlBindingController(SpAuthenticationProvider spAuthenticationProvider
-			, SpAuthenticationSuccessHandler spAuthenticationSuccessHandler) {
-		this.spAuthenticationProvider = spAuthenticationProvider;
-		this.spAuthenticationSuccessHandler = spAuthenticationSuccessHandler;
-	}
+    public SamlBindingController(SpAuthenticationProvider spAuthenticationProvider
+            , SpAuthenticationSuccessHandler spAuthenticationSuccessHandler) {
+        this.spAuthenticationProvider = spAuthenticationProvider;
+        this.spAuthenticationSuccessHandler = spAuthenticationSuccessHandler;
+    }
 
-	@PostMapping("/acs")
-	public void acs(HttpServletRequest request, HttpServletResponse response)
-			throws MessageDecodingException, SecurityException, CertificateException, ValidationException, IOException {
+    @PostMapping("/acs")
+    public void acs(HttpServletRequest request, HttpServletResponse response)
+            throws MessageDecodingException, SecurityException, CertificateException, ValidationException, IOException {
 
-		SAMLMessageContext messageContext = extractSAMLMessageContext(request);
-		Response samlResponse = (Response) messageContext.getInboundSAMLMessage();
+        SAMLMessageContext messageContext = extractSAMLMessageContext(request);
+        Response samlResponse = (Response) messageContext.getInboundSAMLMessage();
 
-		String statusCode = samlResponse.getStatus().getStatusCode().getValue();
-		if (!StatusCode.SUCCESS_URI.equals(statusCode)) {
-			LOGGER.error("SAML login failed. status code[{}]", statusCode);
-			throw new RuntimeException("SAML response status fail, code[" + statusCode + "]");
-		}
+        String statusCode = samlResponse.getStatus().getStatusCode().getValue();
+        if (!StatusCode.SUCCESS_URI.equals(statusCode)) {
+            LOGGER.error("SAML login failed. status code[{}]", statusCode);
+            throw new RuntimeException("SAML response status fail, code[" + statusCode + "]");
+        }
 
-		AssertionConsumer consumer = new AssertionConsumer();
-		SpUser spUser = consumer.consume(samlResponse);
-		LOGGER.info("Login user[{}]", spUser);
+        AssertionConsumer consumer = new AssertionConsumer();
+        SpUser spUser = consumer.consume(samlResponse);
+        LOGGER.info("Login user[{}]", spUser);
 
-		Authentication authentication = spAuthenticationProvider.provideAuthentication(spUser);
-		spAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
-	}
+        Authentication authentication = spAuthenticationProvider.provideAuthentication(spUser);
+        spAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
+    }
 
-	private SAMLMessageContext extractSAMLMessageContext(HttpServletRequest request)
-			throws MessageDecodingException, SecurityException {
-		BasicSAMLMessageContext messageContext = new BasicSAMLMessageContext();
-		messageContext.setInboundMessageTransport(new HttpServletRequestAdapter(request));
-		HTTPPostDecoder decoder = new HTTPPostDecoder();
-		decoder.decode(messageContext);
-		return messageContext;
-	}
+    private SAMLMessageContext extractSAMLMessageContext(HttpServletRequest request)
+            throws MessageDecodingException, SecurityException {
+        BasicSAMLMessageContext messageContext = new BasicSAMLMessageContext();
+        messageContext.setInboundMessageTransport(new HttpServletRequestAdapter(request));
+        HTTPPostDecoder decoder = new HTTPPostDecoder();
+        decoder.decode(messageContext);
+        return messageContext;
+    }
 }

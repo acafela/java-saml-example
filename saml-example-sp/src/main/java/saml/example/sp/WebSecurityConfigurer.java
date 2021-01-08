@@ -29,48 +29,48 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
-	@Bean
-	public ServletContextInitializer servletContextInitializer() {
-		return servletContext -> {
-			SessionCookieConfig sessionCookieConfig = servletContext.getSessionCookieConfig();
-			sessionCookieConfig.setName("transaction.id");
-			sessionCookieConfig.setHttpOnly(true);
-		};
-	}
+    @Bean
+    public ServletContextInitializer servletContextInitializer() {
+        return servletContext -> {
+            SessionCookieConfig sessionCookieConfig = servletContext.getSessionCookieConfig();
+            sessionCookieConfig.setName("transaction.id");
+            sessionCookieConfig.setHttpOnly(true);
+        };
+    }
 
-	@Bean
-	public SamlSsoEntryPoint samlSsoEntryPoint() {
-		return new SamlSsoEntryPoint();
-	}
+    @Bean
+    public SamlSsoEntryPoint samlSsoEntryPoint() {
+        return new SamlSsoEntryPoint();
+    }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-			.antMatchers("/", "/error", "/acs/**", "/sso/saml2").permitAll()
-			.anyRequest().hasRole("USER")
-			.and()
-			.httpBasic().authenticationEntryPoint(samlSsoEntryPoint())
-			.and()
-			.cors()
-			.and()
-			.csrf().disable()
-			.logout().logoutSuccessUrl("/");
-	}
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+            .antMatchers("/", "/error", "/acs/**", "/sso/saml2").permitAll()
+            .anyRequest().hasRole("USER")
+            .and()
+            .httpBasic().authenticationEntryPoint(samlSsoEntryPoint())
+            .and()
+            .cors()
+            .and()
+            .csrf().disable()
+            .logout().logoutSuccessUrl("/");
+    }
 
-	@Bean
-	public SpAuthenticationSuccessHandler spAuthenticationSuccessHandler(){
-		SpAuthenticationSuccessHandler successHandler = new SpAuthenticationSuccessHandler();
-		successHandler.setRedirectUrl("/user");
-		return successHandler;
-	}
+    @Bean
+    public SpAuthenticationSuccessHandler spAuthenticationSuccessHandler(){
+        SpAuthenticationSuccessHandler successHandler = new SpAuthenticationSuccessHandler();
+        successHandler.setRedirectUrl("/user");
+        return successHandler;
+    }
 
-	@Bean
-	public VelocityEngine velocityEngine() {
-		return VelocityFactory.getEngine();
-	}
+    @Bean
+    public VelocityEngine velocityEngine() {
+        return VelocityFactory.getEngine();
+    }
 
-	@Bean(initMethod = "initialize")
-	public ParserPool parserPool() {
-		return new StaticBasicParserPool();
-	}
+    @Bean(initMethod = "initialize")
+    public ParserPool parserPool() {
+        return new StaticBasicParserPool();
+    }
 }
