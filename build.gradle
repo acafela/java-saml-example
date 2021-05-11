@@ -1,59 +1,59 @@
 buildscript {
-	ext {
-		springBootVersion = '2.3.3.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.3.3.RELEASE")
+    }
 }
 
 allprojects {
 
-	apply plugin: 'java'
-	apply plugin: 'eclipse'
-	apply plugin: 'org.springframework.boot'
-	apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
 
-	group = 'saml.example'
-	version = '1.0.0'
-	sourceCompatibility = 1.8
+    compileJava {
+        options.fork = true
+        options.forkOptions.executable = 'javac'
+        options.compilerArgs << "-XDignore.symbol.file"
+    }
+//    compileJava.options.useAnt = true
+//    compileJava.options.compilerArgs << "-XDignore.symbol.file"
 
-	task initSourceFolders {
-		sourceSets*.java.srcDirs*.each {
-			if( !it.exists() ) {
-				it.mkdirs()
-			}
-		}
-		sourceSets*.resources.srcDirs*.each {
-			if( !it.exists() ) {
-				it.mkdirs()
-			}
-		}
-	}
+    group = 'saml.example'
+    version = '1.1.0'
+    sourceCompatibility = 1.8
 
-	repositories {
-		mavenCentral()
-	}
+    task initSourceFolders {
+        sourceSets*.java.srcDirs*.each {
+            if( !it.exists() ) {
+                it.mkdirs()
+            }
+        }
+        sourceSets*.resources.srcDirs*.each {
+            if( !it.exists() ) {
+                it.mkdirs()
+            }
+        }
+    }
 
-	dependencies {
-		compile 'org.springframework.boot:spring-boot-starter-web'
-		compile 'org.springframework.security.extensions:spring-security-saml2-core:1.0.10.RELEASE'
-		compile 'org.opensaml:opensaml:2.6.4'
-		compileOnly 'org.projectlombok:lombok:1.18.12'
-		annotationProcessor 'org.projectlombok:lombok:1.18.12'
-		testCompileOnly 'org.projectlombok:lombok:1.18.12'
-		testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
-	}
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compile 'junit:junit:4.12'
+        compile 'org.springframework.boot:spring-boot-starter-web'
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	compile project(':saml-example-idp')
-	compile project(':saml-example-sp')
+    compile project(':saml-example-core')
+    compile project(':saml-example-idp')
+    compile project(':saml-example-sp')
 }

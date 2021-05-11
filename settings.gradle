@@ -9,5 +9,6 @@
 
 rootProject.name = 'saml-example'
 
+include 'saml-example-core'
 include 'saml-example-idp'
 include 'saml-example-sp'
