@@ -1,11 +1,9 @@
 # Java SAML Example
 
-### Example SAML SSO Case
-SP-Initiated SSO : Redirect/POST Bindings 을 사용합니다.
-
-### Dependency
-[OpenSAML2](https://wiki.shibboleth.net/confluence/display/OpenSAML/Home), [spring-security-saml2](https://github.com/spring-projects/spring-security-saml)  
-OpenSAML, spring-security-saml2 없이 구현한 예제는 [링크](https://github.com/acafela/java-saml-example/tree/without-opensaml) 를 참고해주세요   
+### 예제 SAML SSO 케이스 - SP-Initiated SSO : Redirect/POST Bindings
+SAML 여러 사용 케이스 중 SP-Initiated SSO : Redirect/POST Bindings 을 테스트 가능합니다.  
+[OpenSAML2](https://wiki.shibboleth.net/confluence/display/OpenSAML/Home), [spring-security-saml2](https://github.com/spring-projects/spring-security-saml)이 사용되었습니다.  
+OpenSAML, spring-security-saml2 사용 없이 만든 예제는 [링크](https://github.com/acafela/java-saml-example/tree/without-opensaml)에서 확인 가능합니다.
 
 ### 실행 환경
 
