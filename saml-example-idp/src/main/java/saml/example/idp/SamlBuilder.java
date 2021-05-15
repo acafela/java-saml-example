@@ -16,7 +16,7 @@ import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
-public class SAMLBuilder {
+public class SamlBuilder {
 
     private static final XMLObjectBuilderFactory builderFactory = Configuration.getBuilderFactory();
 
@@ -80,7 +80,7 @@ public class SAMLBuilder {
         return status;
     }
 
-    public static Assertion buildAssertion(SAMLPrincipal principal, Status status, String entityId) {
+    public static Assertion buildAssertion(SamlPrincipal principal, Status status, String entityId) {
         Assertion assertion = buildSAMLObject(Assertion.class, Assertion.DEFAULT_ELEMENT_NAME);
 
         if (status.getStatusCode().getValue().equals(StatusCode.SUCCESS_URI)) {
@@ -157,7 +157,7 @@ public class SAMLBuilder {
 
     }
 
-    private static AttributeStatement buildAttributeStatement(List<SAMLAttribute> attributes) {
+    private static AttributeStatement buildAttributeStatement(List<SamlAttribute> attributes) {
         AttributeStatement attributeStatement = buildSAMLObject(AttributeStatement.class,
                 AttributeStatement.DEFAULT_ELEMENT_NAME);
 

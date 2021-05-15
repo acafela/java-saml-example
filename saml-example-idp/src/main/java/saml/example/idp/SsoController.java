@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class SsoController {
 
-    private final SAMLMessageHandler samlMessageHandler;
+    private final SamlMessageHandler samlMessageHandler;
 
-    public SsoController(SAMLMessageHandler samlMessageHandler) {
+    public SsoController(SamlMessageHandler samlMessageHandler) {
         this.samlMessageHandler = samlMessageHandler;
     }
 
@@ -21,8 +21,8 @@ public class SsoController {
     public void sso(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws Exception {
         @SuppressWarnings("rawtypes")
         SAMLMessageContext messageContext = samlMessageHandler.extractSAMLMessageContext(request, response);
-        AbstractSAMLPrincipalFactory principalFactory = new LocalSAMLPrincipalFactory();
-        SAMLPrincipal principal = principalFactory.createSAMLPrincipal(messageContext, authentication);
+        AbstractSamlPrincipalFactory principalFactory = new LocalSAMLPrincipalFactory();
+        SamlPrincipal principal = principalFactory.createSAMLPrincipal(messageContext, authentication);
         samlMessageHandler.sendAuthnResponse(principal, response);
     }
 

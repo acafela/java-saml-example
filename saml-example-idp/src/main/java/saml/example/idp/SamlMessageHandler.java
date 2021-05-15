@@ -2,11 +2,11 @@ package saml.example.idp;
 
 import static java.util.Arrays.asList;
 import static org.opensaml.xml.Configuration.getValidatorSuite;
-import static saml.example.idp.SAMLBuilder.buildAssertion;
-import static saml.example.idp.SAMLBuilder.buildIssuer;
-import static saml.example.idp.SAMLBuilder.buildSAMLObject;
-import static saml.example.idp.SAMLBuilder.buildStatus;
-import static saml.example.idp.SAMLBuilder.signAssertion;
+import static saml.example.idp.SamlBuilder.buildAssertion;
+import static saml.example.idp.SamlBuilder.buildIssuer;
+import static saml.example.idp.SamlBuilder.buildSAMLObject;
+import static saml.example.idp.SamlBuilder.buildStatus;
+import static saml.example.idp.SamlBuilder.signAssertion;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ import org.opensaml.xml.validation.ValidatorSuite;
 import org.springframework.security.saml.context.SAMLMessageContext;
 import org.springframework.security.saml.key.KeyManager;
 
-public class SAMLMessageHandler {
+public class SamlMessageHandler {
 
     private final KeyManager keyManager;
     private final SAMLMessageDecoder decoder;
@@ -51,7 +51,7 @@ public class SAMLMessageHandler {
     private final SAMLMessageEncoder encoder;
     private final String entityId;
 
-    public SAMLMessageHandler(String entityId,
+    public SamlMessageHandler(String entityId,
                               KeyManager keyManager,
                               SAMLMessageDecoder decoder,
                               SAMLMessageEncoder encoder,
@@ -86,14 +86,14 @@ public class SAMLMessageHandler {
     }
 
     @SuppressWarnings("unchecked")
-    public void sendAuthnResponse(SAMLPrincipal principal, HttpServletResponse response)
+    public void sendAuthnResponse(SamlPrincipal principal, HttpServletResponse response)
             throws MarshallingException, SignatureException, MessageEncodingException {
         Status status = buildStatus(StatusCode.SUCCESS_URI);
         Credential signingCredential = resolveCredential(entityId);
         Response authResponse = buildSAMLObject(Response.class, Response.DEFAULT_ELEMENT_NAME);
         Issuer issuer = buildIssuer(entityId);
         authResponse.setIssuer(issuer);
-        authResponse.setID(SAMLBuilder.randomSAMLId());
+        authResponse.setID(SamlBuilder.randomSAMLId());
         authResponse.setIssueInstant(new DateTime());
         authResponse.setInResponseTo(principal.getRequestID());
 

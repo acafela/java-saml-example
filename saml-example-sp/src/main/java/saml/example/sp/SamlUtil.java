@@ -20,11 +20,11 @@ import org.w3c.dom.ls.LSSerializer;
 
 import java.util.List;
 
-public final class SAMLUtil {
+final class SamlUtil {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SAMLUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SamlUtil.class);
 
-    public static String getStringFromXMLObject(XMLObject xmlObj) {
+    static String getStringFromXMLObject(XMLObject xmlObj) {
         if (xmlObj instanceof XSString) {
             return ((XSString) xmlObj).getValue();
         } else if (xmlObj instanceof XSAny) {
@@ -45,7 +45,7 @@ public final class SAMLUtil {
         return "";
     }
 
-    public static String samlObjectToString(SAMLObject object) {
+    static String samlObjectToString(SAMLObject object) {
         try {
             Element ele = samlObjectToElement(object);
             return elementToString(ele);

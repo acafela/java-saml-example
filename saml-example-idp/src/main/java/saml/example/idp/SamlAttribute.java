@@ -3,17 +3,17 @@ package saml.example.idp;
 import java.util.Arrays;
 import java.util.List;
 
-public class SAMLAttribute {
+public class SamlAttribute {
 
     private final String name;
     private final List<String> values;
 
-    public SAMLAttribute(String name, List<String> values) {
+    public SamlAttribute(String name, List<String> values) {
         this.name = name;
         this.values = values;
     }
 
-    public SAMLAttribute(String name, String value) {
+    public SamlAttribute(String name, String value) {
         this.name = name;
         this.values = Arrays.asList(value);
     }

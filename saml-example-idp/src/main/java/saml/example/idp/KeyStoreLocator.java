@@ -1,5 +1,7 @@
 package saml.example.idp;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.KeyFactory;
@@ -15,8 +17,6 @@ import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
-
-import org.apache.commons.io.IOUtils;
 
 public class KeyStoreLocator {
 
@@ -50,11 +50,11 @@ public class KeyStoreLocator {
         ArrayList<Certificate> certs = new ArrayList<>();
         certs.add(cert);
 
-        byte[] privKeyBytes = IOUtils.toByteArray(new ByteArrayInputStream(decodedKey));
+        byte[] privateKeyBytes = IOUtils.toByteArray(new ByteArrayInputStream(decodedKey));
 
-        KeySpec ks = new PKCS8EncodedKeySpec(privKeyBytes);
-        RSAPrivateKey privKey = (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(ks);
-        keyStore.setKeyEntry(alias, privKey, passwordChars, certs.toArray(new Certificate[certs.size()]));
+        KeySpec ks = new PKCS8EncodedKeySpec(privateKeyBytes);
+        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(ks);
+        keyStore.setKeyEntry(alias, rsaPrivateKey, passwordChars, certs.toArray(new Certificate[certs.size()]));
     }
 
     private static String wrapCert(String certificate) {

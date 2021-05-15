@@ -10,6 +10,10 @@ import org.opensaml.xml.signature.X509Data;
 import org.opensaml.xml.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.ByteArrayInputStream;
 import java.security.PublicKey;
@@ -18,38 +22,42 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.List;
 
-/**
- * A SAML assertion(SAML response) consumer.
- */
-final class AssertionConsumer {
+final class SimpleSamlAssertionConsumer implements SamlAssertionConsumer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AssertionConsumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleSamlAssertionConsumer.class);
+    /**
+     * SAML assertion valid time(minute)
+     */
+    private static final int ASSERTION_VALID_TIME = 30;
 
-    SpUser consume(Response samlResponse) throws CertificateException, ValidationException {
+    public UserDetails consume(Response samlResponse) throws AuthenticationException {
         validateSignature(samlResponse);
-        checkAuthnInstant(samlResponse, 30);
+        checkAuthnInstant(samlResponse);
         Assertion assertion = samlResponse.getAssertions().get(0);
-        LOGGER.debug("Assertion[{}]", SAMLUtil.samlObjectToString(assertion));
+        LOGGER.debug("Assertion[{}]", SamlUtil.samlObjectToString(assertion));
         return createUser(assertion);
     }
 
-    private SpUser createUser(Assertion assertion) {
+    private SamlUserDetails createUser(Assertion assertion) {
         String nameID = assertion.getSubject().getNameID().getValue();
         AttributeStatement attributeStatement = assertion.getAttributeStatements().get(0);
         List<Attribute> attributes = attributeStatement.getAttributes();
-        return new SpUser(nameID, attributes);
+        return new SamlUserDetails(nameID, attributes);
     }
 
-    private void validateSignature(Response samlResponse) throws CertificateException, ValidationException {
-        Signature signature = samlResponse.getSignature();
-        PublicKey publicKey = extractPublicKey(signature);
-        SignatureValidator validator = createValidator(publicKey);
+    private void validateSignature(Response samlResponse) throws AuthenticationException {
         try {
+            Signature signature = samlResponse.getSignature();
+            PublicKey publicKey = extractPublicKey(signature);
+            SignatureValidator validator = createValidator(publicKey);
             validator.validate(samlResponse.getSignature());
             LOGGER.debug("Signature validation success");
+        } catch (CertificateException e) {
+            LOGGER.error("Invalid certification(public key)", e);
+            throw new BadCredentialsException("Invalid certification(public key)", e);
         } catch (ValidationException e) {
             LOGGER.error("Signature validation fail.", e);
-            throw e;
+            throw new BadCredentialsException("Signature validation fail", e);
         }
     }
 
@@ -88,15 +96,15 @@ final class AssertionConsumer {
         return new SignatureValidator(credential);
     }
 
-    private void checkAuthnInstant(Response samlResponse, int validMin) throws ValidationException {
+    private void checkAuthnInstant(Response samlResponse) throws AuthenticationException {
         Assertion assertion = samlResponse.getAssertions().get(0);
         AuthnStatement authnStatement = assertion.getAuthnStatements().get(0);
         DateTime authnInstant = authnStatement.getAuthnInstant();
         LOGGER.debug("AuthnInstant[{}]", authnInstant);
 
-        DateTime validTime = authnInstant.plusMinutes(validMin);
+        DateTime validTime = authnInstant.plusMinutes(ASSERTION_VALID_TIME);
         if (DateTime.now().compareTo(validTime) > 0) {
-            throw new ValidationException("AuthnInstant time out : " + authnInstant);
+            throw new CredentialsExpiredException("AuthnInstant time out : " + authnInstant);
         }
     }
 }

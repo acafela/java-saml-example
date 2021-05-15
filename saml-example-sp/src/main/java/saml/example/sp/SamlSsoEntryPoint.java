@@ -75,8 +75,8 @@ public class SamlSsoEntryPoint extends GenericFilterBean implements Authenticati
             context.setOutboundMessageTransport(transport);
             context.setPeerEntityEndpoint(getIDPEndpoint());
             Issuer issuer = buildIssuer(entityId);
-            AuthnRequest authnRequest = buildAuthnRequest(acs, SAMLConstants.SAML2_POST_BINDING_URI, issuer);
-            LOGGER.debug("Created AuthnRequest[{}]", SAMLUtil.samlObjectToString(authnRequest));
+            AuthnRequest authnRequest = buildAuthnRequest(entityId + acs, SAMLConstants.SAML2_POST_BINDING_URI, issuer);
+            LOGGER.debug("Created AuthnRequest[{}]", SamlUtil.samlObjectToString(authnRequest));
             context.setOutboundSAMLMessage(authnRequest);
 
             HTTPRedirectDeflateEncoder encoder = new HTTPRedirectDeflateEncoder();

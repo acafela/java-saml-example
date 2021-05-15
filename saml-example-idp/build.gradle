@@ -3,7 +3,8 @@ jar {
 }
 
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	compile 'org.apache.commons:commons-lang3:3.8.1'
+    compile 'org.springframework.security.extensions:spring-security-saml2-core:1.0.10.RELEASE'
+    compile 'org.apache.commons:commons-lang3:3.8.1'
+    compile 'commons-io:commons-io:2.8.0'
 }
