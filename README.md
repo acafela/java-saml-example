@@ -1,9 +1,7 @@
 # Java SAML Example
 
 ### 예제 SAML SSO 케이스 - SP-Initiated SSO : Redirect/POST Bindings
-SAML 여러 사용 케이스 중 SP-Initiated SSO : Redirect/POST Bindings 을 테스트 가능합니다.  
-[OpenSAML2](https://wiki.shibboleth.net/confluence/display/OpenSAML/Home), [spring-security-saml2](https://github.com/spring-projects/spring-security-saml)이 사용되었습니다.  
-OpenSAML, spring-security-saml2 사용 없이 만든 예제는 [링크](https://github.com/acafela/java-saml-example/tree/without-opensaml)에서 확인 가능합니다.
+SAML 여러 사용 케이스 중 SP-Initiated SSO : Redirect/POST Bindings 테스트 가능합니다.
 
 ### 실행 환경
 
@@ -32,25 +30,25 @@ cd java-saml-example
 
 #### 4. [Service provider - http://localhost:9106/user](http://localhost:9106/user) 접속
 
-- _Identity Provider 인증 페이지로 리다이렉트 됩니다._
+- Identity Provider 인증 페이지로 리다이렉트
 
 #### 5. Identity Provider 인증 페이지에서 ID/PWD 입력해 로그인
 
-- 어드민 계정 ID/PWD : admin / admin123  
-- 일반 사용자 계정 ID/PWD : user / user123  
+- admin / admin123 or user / user123
 
-  ![Java SAML Example 인증 화면](https://acafela.github.io//assets/capture/java-saml-example-capture1.PNG)
+#### 6. 인증 성공
 
-#### 6. 인증 성공후 IdP SAML Response - NameID, Attributes 값 확인
+### Service Provider 주요 클래스
 
-- admin 계정으로 로그인 시  
-  ![Java SAML Example 인증 완료 화면1](https://acafela.github.io//assets/capture/java-saml-example-capture2.PNG)
+- SamlAssertionConsumeFilter : Assertion consume url 처리 필터, AbstractAuthenticationProcessingFilter 확장 클래스
+- SimpleSamlAssertionConsumer : SAML Response 검증 후 UserDetails 생성
+- SamlSsoEntryPoint : SAML Request redirect, AuthenticationEntryPoint 구현
 
-- user 계정으로 로그인 시  
-  ![Java SAML Example 인증 완료 화면2](https://acafela.github.io//assets/capture/java-saml-example-capture3.PNG)
+### Identity Provider 주요 클래스
+
+- AbstractSamlPrincipalFactory : SamlPrincipal 생성, 옵션 Attribute는 createAttributes() 추상 메소드에서 생성
 
 ### Reference
 
 - [OASIS Doc](http://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0.html)
-- [OpenConext/Mujina](https://github.com/OpenConext/Mujina)
 - [pac4j](https://github.com/pac4j/pac4j)
