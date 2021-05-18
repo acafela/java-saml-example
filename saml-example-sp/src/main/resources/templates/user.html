@@ -6,7 +6,7 @@
 <body>
     <div>
         <p>SAML login success!</p>
-        <p>[[${#httpServletRequest.remoteUser}]]</p>
+        <p th:text="${samlUser}"></p>
     </div>
 </body>
 </html>

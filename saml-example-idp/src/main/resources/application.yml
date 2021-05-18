@@ -18,3 +18,5 @@ logging:
   level:
     root: info
     saml.example.idp: debug
+    # debug filter chain
+#    org.springframework.security.web.FilterChainProxy: debug

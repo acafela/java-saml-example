@@ -18,8 +18,6 @@ final class SamlUserDetails implements UserDetails {
 
     private String username;
     private String email;
-    private String department;
-    private String displayName;
     private String federationIdentifier;
     private List<GrantedAuthority> authorities = new ArrayList<>();
 
@@ -28,14 +26,8 @@ final class SamlUserDetails implements UserDetails {
         for (Attribute attr : samlAttributes) {
             String attrName  = attr.getName();
             switch (attrName) {
-                case "User.Department":
-                    department = SamlUtil.getStringFromXMLObject(attr.getAttributeValues().get(0));
-                    break;
                 case "User.Email":
                     email = SamlUtil.getStringFromXMLObject(attr.getAttributeValues().get(0));
-                    break;
-                case "User.DisplayName":
-                    displayName = SamlUtil.getStringFromXMLObject(attr.getAttributeValues().get(0));
                     break;
                 case "User.FederationIdentifier":
                     federationIdentifier = SamlUtil.getStringFromXMLObject(attr.getAttributeValues().get(0));

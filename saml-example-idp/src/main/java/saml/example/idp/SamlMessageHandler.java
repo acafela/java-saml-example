@@ -42,7 +42,7 @@ import org.opensaml.xml.validation.ValidatorSuite;
 import org.springframework.security.saml.context.SAMLMessageContext;
 import org.springframework.security.saml.key.KeyManager;
 
-public class SamlMessageHandler {
+final class SamlMessageHandler {
 
     private final KeyManager keyManager;
     private final SAMLMessageDecoder decoder;

@@ -18,21 +18,20 @@ import lombok.ToString;
 @Builder(builderMethodName = "hiddenBuilder")
 @AllArgsConstructor
 @ToString
-public class SamlPrincipal implements Principal {
+final class SamlPrincipal implements Principal {
 
     private String serviceProviderEntityID;
     private String requestID;
     private String assertionConsumerServiceUrl;
     private String relayState;
 
-    @NonNull private List<SamlAttribute> attributes;
+    @NonNull private List<SamlAttribute> attributes = new ArrayList<>();
     @NonNull private String nameID;
     @NonNull private String nameIDType;
 
     public SamlPrincipal(String nameID, String nameIDType, List<SamlAttribute> attributes) {
         this.nameID = nameID;
         this.nameIDType = nameIDType;
-        this.attributes = new ArrayList<>();
         this.attributes.addAll(attributes);
     }
 

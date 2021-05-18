@@ -46,7 +46,7 @@ cd java-saml-example
 
 ### Identity Provider 주요 클래스
 
-- AbstractSamlPrincipalFactory : SamlPrincipal 생성, 옵션 Attribute는 createAttributes() 추상 메소드에서 생성
+- SamlResponseFilter : SAML Response 전달을 위한 필터
 
 ### Reference
 

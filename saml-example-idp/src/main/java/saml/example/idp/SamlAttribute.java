@@ -3,7 +3,7 @@ package saml.example.idp;
 import java.util.Arrays;
 import java.util.List;
 
-public class SamlAttribute {
+final class SamlAttribute {
 
     private final String name;
     private final List<String> values;

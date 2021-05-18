@@ -16,16 +16,16 @@ import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
-public class SamlBuilder {
+final class SamlBuilder {
 
     private static final XMLObjectBuilderFactory builderFactory = Configuration.getBuilderFactory();
 
     @SuppressWarnings("unchecked")
-    public static <T> T buildSAMLObject(final Class<T> objectClass, QName qName) {
+    static <T> T buildSAMLObject(final Class<T> objectClass, QName qName) {
         return (T) builderFactory.getBuilder(qName).buildObject(qName);
     }
 
-    public static Issuer buildIssuer(String issuingEntityName) {
+    static Issuer buildIssuer(String issuingEntityName) {
         Issuer issuer = buildSAMLObject(Issuer.class, Issuer.DEFAULT_ELEMENT_NAME);
         issuer.setValue(issuingEntityName);
         issuer.setFormat(NameIDType.ENTITY);
@@ -58,7 +58,7 @@ public class SamlBuilder {
         return subject;
     }
 
-    public static Status buildStatus(String value) {
+    static Status buildStatus(String value) {
         Status status = buildSAMLObject(Status.class, Status.DEFAULT_ELEMENT_NAME);
         StatusCode statusCode = buildSAMLObject(StatusCode.class, StatusCode.DEFAULT_ELEMENT_NAME);
         statusCode.setValue(value);
@@ -66,7 +66,7 @@ public class SamlBuilder {
         return status;
     }
 
-    public static Status buildStatus(String value, String subStatus, String message) {
+    static Status buildStatus(String value, String subStatus, String message) {
         Status status = buildStatus(value);
 
         StatusCode subStatusCode = buildSAMLObject(StatusCode.class, StatusCode.DEFAULT_ELEMENT_NAME);
@@ -80,7 +80,7 @@ public class SamlBuilder {
         return status;
     }
 
-    public static Assertion buildAssertion(SamlPrincipal principal, Status status, String entityId) {
+    static Assertion buildAssertion(SamlPrincipal principal, Status status, String entityId) {
         Assertion assertion = buildSAMLObject(Assertion.class, Assertion.DEFAULT_ELEMENT_NAME);
 
         if (status.getStatusCode().getValue().equals(StatusCode.SUCCESS_URI)) {
@@ -116,7 +116,7 @@ public class SamlBuilder {
         return assertion;
     }
 
-    public static void signAssertion(SignableXMLObject signableXMLObject, Credential signingCredential)
+    static void signAssertion(SignableXMLObject signableXMLObject, Credential signingCredential)
             throws MarshallingException, SignatureException {
         Signature signature = buildSAMLObject(Signature.class, Signature.DEFAULT_ELEMENT_NAME);
 
@@ -131,7 +131,7 @@ public class SamlBuilder {
         Signer.signObject(signature);
     }
 
-    public static String randomSAMLId() {
+    static String randomSAMLId() {
         return "_" + UUID.randomUUID().toString();
     }
 

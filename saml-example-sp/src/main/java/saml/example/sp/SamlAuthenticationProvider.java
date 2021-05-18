@@ -52,8 +52,8 @@ public final class SamlAuthenticationProvider implements AuthenticationProvider 
 
         UserDetails userDetails = assertionConsumer.consume(samlResponse);
         LOGGER.info("Login user[{}]", userDetails);
-
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER"); // for test!!
+
         SamlAuthenticationToken resultToken = new SamlAuthenticationToken(userDetails.getUsername(), authorities);
         resultToken.setAuthenticated(true);
         resultToken.setDetails(userDetails);
