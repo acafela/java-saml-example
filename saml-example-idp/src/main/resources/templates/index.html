@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Identity Provider</title>
+</head>
+<body>
+    <div>
+        <p>Login success!</p>
+        <p>Hello [[${#httpServletRequest.remoteUser}]]!</p>
+    </div>
+</body>
+</html>

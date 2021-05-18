@@ -38,6 +38,7 @@ import org.springframework.security.saml.util.VelocityFactory;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
@@ -49,10 +50,13 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 @EnableWebSecurity
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
+    @Value("${idp.sso_url}")
+    private String ssoUrl;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/error").permitAll()
+                .antMatchers("/error").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
@@ -60,9 +64,9 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .failureUrl("/login?error=true").permitAll()
                 .and()
             .logout()
-                .logoutSuccessUrl("/")
+                .logoutSuccessUrl("/login")
                 .and()
-            .addFilterAfter(samlFilterChain(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(samlResponseFilter(), FilterSecurityInterceptor.class)
             .csrf().disable();
     }
 
@@ -88,15 +92,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public FilterChainProxy samlFilterChain() {
-        List<SecurityFilterChain> chains = new ArrayList<>();
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/sso/**"), samlResponseFilter()));
-        return new FilterChainProxy(chains);
-    }
-
-    @Bean
     public SamlResponseFilter samlResponseFilter() {
-        return new SamlResponseFilter();
+        return new SamlResponseFilter(ssoUrl);
     }
 
     @Bean

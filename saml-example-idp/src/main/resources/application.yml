@@ -13,10 +13,11 @@ idp:
   passphrase: todareistodo
   clock_skew: 300
   expires: 300
+  sso_url: /sso
 
 logging:
   level:
     root: info
     saml.example.idp: debug
     # debug filter chain
-#    org.springframework.security.web.FilterChainProxy: debug
+    org.springframework.security.web.FilterChainProxy: debug
