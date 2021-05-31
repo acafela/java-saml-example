@@ -43,11 +43,8 @@ public class SamlResponseFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException {
-        LOGGER.debug("url[{}]", request.getRequestURI());
         try {
             if (!request.getRequestURI().startsWith(ssoUrl)) {
-                System.out.println("ddd");
-                System.out.println(ssoUrl);
                 filterChain.doFilter(request, response);
                 return;
             }
