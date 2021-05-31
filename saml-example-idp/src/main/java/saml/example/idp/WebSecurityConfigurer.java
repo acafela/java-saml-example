@@ -92,6 +92,15 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public ServletContextInitializer servletContextInitializer() {
+        return servletContext -> {
+            SessionCookieConfig sessionCookieConfig = servletContext.getSessionCookieConfig();
+            sessionCookieConfig.setName("idp.session");
+            sessionCookieConfig.setHttpOnly(true);
+        };
+    }
+
+    @Bean
     public SamlResponseFilter samlResponseFilter() {
         return new SamlResponseFilter(ssoUrl);
     }

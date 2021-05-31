@@ -3,6 +3,7 @@ package saml.example.sp;
 import org.opensaml.xml.parse.ParserPool;
 import org.opensaml.xml.parse.StaticBasicParserPool;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.servlet.SessionCookieConfig;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +52,15 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder authBuilder) {
         authBuilder.authenticationProvider(authenticationProvider());
+    }
+
+    @Bean
+    public ServletContextInitializer servletContextInitializer() {
+        return servletContext -> {
+            SessionCookieConfig sessionCookieConfig = servletContext.getSessionCookieConfig();
+            sessionCookieConfig.setName("sp.session");
+            sessionCookieConfig.setHttpOnly(true);
+        };
     }
 
     @Bean
